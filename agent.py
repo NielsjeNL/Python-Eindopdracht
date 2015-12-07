@@ -26,9 +26,10 @@ def get_value(number):
     # Another example of a value that is acquired using Python only.
     # returns a string
     if number == 2:
-        return sys.getdefaultencoding()
+        return sys.getdefaultencoding()             
 
     # Useless of course but returning an int
+    # Hier kunnen we zelf een funcite aan hangen dus
     if number == 3:
         return 8888
 
