@@ -67,13 +67,10 @@ def get_value(number):
 # do not change anything unless you know what you're doing.
 dispatcher = SoapDispatcher(
     'my_dispatcher',
-<<<<<<< HEAD
     location = "http://localhost:"+port+'/', # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
     action = 'http://localhost:'+port+"/", #SOAPAction
-=======
     location = "http://localhost:"+str(port)+"/", # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
     action = "http://localhost:"+str(port)+"/", #SOAPAction
->>>>>>> origin/master
     namespace = "http://example.com/sample.wsdl", prefix="ns0",
     trace = True,
     ns = True)
@@ -85,12 +82,6 @@ dispatcher.register_function('get_value', get_value,
     )
 
 # Let this agent listen forever, do not change anything unless needed.
-<<<<<<< HEAD
-print "Starting server on port",int(port),"..."
-httpd = HTTPServer(("", int(port)), SOAPHandler)
-httpd.dispatcher = dispatcher
-httpd.serve_forever()
-=======
 try:
     print "Starting server on port",port,"..."
     httpd = HTTPServer(("", port), SOAPHandler)
@@ -99,4 +90,3 @@ try:
 except:
     print "Er is iets fout gegaan bij het opzetten van de server, controleer of de poort vrij is!"
     exit()
->>>>>>> origin/master
