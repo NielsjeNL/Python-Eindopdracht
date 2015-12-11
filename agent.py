@@ -37,8 +37,8 @@ def get_value(number):
     # Exporting with export-csv and reading the CSV using Python is also possible of course.
     if number == 4:
         p=subprocess.Popen(['powershell.exe',    # Atlijd gelijk of volledig pad naar powershell.exe
-            '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy
-            'c:\\scripts\\agent_counters.ps1'],  # Naam van en pad naar je PowerShell script
+            '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy # Check eerst of Set-ExecutionPolicy uitgevoerd moet worden
+            '.\\agent_counters.ps1'],  # Naam van en pad naar je PowerShell script # HET SCRIPT WERKT NU ZOLANG JE CURRENT WORK DIRECTORY DE EINDOPDRACHT FOLDER IS
         stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
         output = p.stdout.read()                 # De stdout
         return output
