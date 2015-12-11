@@ -8,9 +8,15 @@ c:\\P2\App\python.exe c:\scripts\agent.py
 
 from pysimplesoap.server import SoapDispatcher, SOAPHandler
 from BaseHTTPServer import HTTPServer
+from lxml import etree
 import sys,subprocess
+# ---------------------------------------------------------
+# Variabelen aanmaken
+configtree = etree.parse('agentconfig.xml')
 
 # ---------------------------------------------------------
+# Config inlezen
+port = int(configtree.xpath('/config/port/text()')[0])
 
 # List of all your agent functions that can be called from within the management script.
 # A real developer should do this differently, but this is more easy.
@@ -58,11 +64,10 @@ def get_value(number):
 # ---------------------------------------------------------
 
 # do not change anything unless you know what you're doing.
-port=8008
 dispatcher = SoapDispatcher(
     'my_dispatcher',
-    location = "http://localhost:8008/",
-    action = 'http://localhost:8008/', # SOAPAction
+    location = "http://localhost:8008/", # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
+    action = 'http://localhost:8008/', #SOAPAction
     namespace = "http://example.com/sample.wsdl", prefix="ns0",
     trace = True,
     ns = True)
@@ -78,4 +83,3 @@ print "Starting server on port",port,"..."
 httpd = HTTPServer(("", port), SOAPHandler)
 httpd.dispatcher = dispatcher
 httpd.serve_forever()
-
