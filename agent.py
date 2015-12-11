@@ -1,11 +1,3 @@
-"""
-Usage:
-Portable Python installed in c:\P2.7.6.1 and agent script in c:\scripts\agent.py
-Open the firewall if needed and start this agent:
-<cmd>
-c:\\P2\App\python.exe c:\scripts\agent.py
-"""
-
 from pysimplesoap.server import SoapDispatcher, SOAPHandler
 from BaseHTTPServer import HTTPServer
 from lxml import etree
@@ -17,7 +9,6 @@ configtree = etree.parse('agentconfig.xml')
 # ---------------------------------------------------------
 # Config inlezen
 port = str(configtree.xpath('/config/port/text()')[0])
-#portint = int(configtree.xpath('/config/port/text()')[0])
 
 # List of all your agent functions that can be called from within the management script.
 # A real developer should do this differently, but this is more easy.
@@ -63,14 +54,11 @@ def get_value(number):
 
 
 # ---------------------------------------------------------
-
 # do not change anything unless you know what you're doing.
 dispatcher = SoapDispatcher(
     'my_dispatcher',
-    location = "http://localhost:"+port+'/', # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
-    action = 'http://localhost:'+port+"/", #SOAPAction
-    location = "http://localhost:"+str(port)+"/", # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
-    action = "http://localhost:"+str(port)+"/", #SOAPAction
+    location = "http://localhost:"+port+"/",
+    action = "http://localhost:"+port+"/", #SOAPAction
     namespace = "http://example.com/sample.wsdl", prefix="ns0",
     trace = True,
     ns = True)
@@ -84,7 +72,7 @@ dispatcher.register_function('get_value', get_value,
 # Let this agent listen forever, do not change anything unless needed.
 try:
     print "Starting server on port",port,"..."
-    httpd = HTTPServer(("", port), SOAPHandler)
+    httpd = HTTPServer(("", int(port)), SOAPHandler)
     httpd.dispatcher = dispatcher
     httpd.serve_forever()
 except:
