@@ -16,7 +16,8 @@ configtree = etree.parse('agentconfig.xml')
 
 # ---------------------------------------------------------
 # Config inlezen
-port = int(configtree.xpath('/config/port/text()')[0])
+port = str(configtree.xpath('/config/port/text()')[0])
+#portint = int(configtree.xpath('/config/port/text()')[0])
 
 # List of all your agent functions that can be called from within the management script.
 # A real developer should do this differently, but this is more easy.
@@ -66,8 +67,8 @@ def get_value(number):
 # do not change anything unless you know what you're doing.
 dispatcher = SoapDispatcher(
     'my_dispatcher',
-    location = "http://localhost:8008/", # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
-    action = 'http://localhost:8008/', #SOAPAction
+    location = "http://localhost:"+port+'/', # Poort in string laat ik nog even staan totdat het script wat uitgebreider is
+    action = 'http://localhost:'+port+"/", #SOAPAction
     namespace = "http://example.com/sample.wsdl", prefix="ns0",
     trace = True,
     ns = True)
@@ -79,7 +80,7 @@ dispatcher.register_function('get_value', get_value,
     )
 
 # Let this agent listen forever, do not change anything unless needed.
-print "Starting server on port",port,"..."
-httpd = HTTPServer(("", port), SOAPHandler)
+print "Starting server on port",int(port),"..."
+httpd = HTTPServer(("", int(port)), SOAPHandler)
 httpd.dispatcher = dispatcher
 httpd.serve_forever()
