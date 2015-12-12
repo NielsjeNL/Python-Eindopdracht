@@ -42,6 +42,7 @@ body {
 	font-size: 13px;
 	font-weight: bold;
 	line-height: 20px;
+	max-height: 25px;
 	color: #333;
 }
 .header-nav-link:hover {
@@ -54,6 +55,11 @@ body {
 	font-weight: bold;
 	line-height: 20px;
 	color: #333;
+}
+
+.header-icon {
+	height:25px;
+	white-space:nowrap;
 }
 
 ul, ol {
