@@ -13,7 +13,7 @@ port = str(configtree.xpath('/config/port/text()')[0])
 # List of all your agent functions that can be called from within the management script.
 # A real developer should do this differently, but this is more easy.
 def get_value(number):
-    "return the result of one of the pre-define numbers"
+    # return the result of one of the pre-define numbers
     print "get_value, of of item with number=",number
 
     # An example of a value that is acquired using Python only.
