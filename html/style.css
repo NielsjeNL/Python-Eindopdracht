@@ -44,6 +44,17 @@ body {
 	line-height: 20px;
 	color: #333;
 }
+.header-nav-link:hover {
+	color: #FF3D00;
+}
+.header-nav-linkc {
+	display:block;
+	padding: 4px 8px;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 20px;
+	color: #333;
+}
 
 ul, ol {
 	padding: 0;
