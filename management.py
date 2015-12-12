@@ -3,16 +3,15 @@ from lxml import etree
 import cgi, cgitb
 cgitb.enable()
 
-
 # ---------------------------------------------------------
 # Variabelen aanmaken
 form = cgi.FieldStorage()
 value1 = form.getvalue('value1')
 value2  = form.getvalue('value2')
-configtree = etree.parse('mgmtconfig.xml')
 
 # ---------------------------------------------------------
 # Config inlezen
+configtree = etree.parse('mgmtconfig.xml')
 hostname = str(configtree.xpath('/config/hostname/text()')[0])
 port = str(configtree.xpath('/config/port/text()')[0])
 
@@ -32,10 +31,12 @@ except:
 
 # HTML-metadata
 print 'Status: 200 OK\n'
-#print "Content-Type: text/html;charset=utf-8" #deze regel zorgt er juist voor dat HTML niet goed werkt, dafuq?
 #De default pagina
 print '<HTML>'
-print '<HEAD><TITLE>Management script</TITLE></HEAD>'
+print '<HEAD>'
+print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'
+print '<TITLE>Management script</TITLE>'
+print '</HEAD>'
 print '<BODY>'
 print '<H1>Welkom bij dit management script!</H1>'
 print '<p>Placeholder text aw yeah</p>'
