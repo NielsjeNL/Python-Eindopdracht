@@ -35,8 +35,8 @@ def get_value(number):
     # Exporting with export-csv and reading the CSV using Python is also possible of course.
     if number == 4:
         p=subprocess.Popen(['powershell.exe',    # Atlijd gelijk of volledig pad naar powershell.exe
-            '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy # Check eerst of Set-ExecutionPolicy uitgevoerd moet worden
-            '.\\agent_counters.ps1'],  # Naam van en pad naar je PowerShell script # HET SCRIPT WERKT NU ZOLANG JE CURRENT WORK DIRECTORY DE EINDOPDRACHT FOLDER IS
+            '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy | Check eerst of Set-ExecutionPolicy uitgevoerd moet worden
+            '.\\agent_counters.ps1'],  # Naam van en pad naar je PowerShell script | is nu folder waarin .py staat
         stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
         output = p.stdout.read()                 # De stdout
         return output
@@ -44,14 +44,23 @@ def get_value(number):
     # Example of sing a PowerShell oneliner. Useful for simple PowerShell commands.
     if number == 5:
         p=subprocess.Popen(['powershell',
-            "get-service | measure-object | select -expandproperty count"],
+                            "get-service | measure-object | select -expandproperty count"],
         stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
         output = p.stdout.read()                 # De stdout
         return output
 
+    # Powershell: Beschikbaar geheugen
+    if number == 8:
+        p=subprocess.Popen(['powershell',
+                            """Get-WmiObject Win32_logicaldisk ` | Select -first 1 FreeSpace | 
+                               ForEach-Object {$_.freespace / 1GB}"""],
+                            stdout = subprocess.PIPE)
+        output = float(p.stdout.read())
+        output = str("%.2f" % output)+" GB"
+        return output
+
     # Last value
     return None
-
 
 # ---------------------------------------------------------
 # do not change anything unless you know what you're doing.

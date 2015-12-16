@@ -6,7 +6,7 @@ cgitb.enable()
 # ---------------------------------------------------------
 # Variabelen aanmaken
 form = cgi.FieldStorage()
-value1 = form.getvalue('value1')
+hostnameHTTP = form.getvalue('hostname')
 value2  = form.getvalue('value2')
 
 # ---------------------------------------------------------
@@ -58,6 +58,11 @@ print "Resultaat number=4 :", r4.rstrip(),"<br>" # This is a multiline: strip th
 
 r5=str(client.get_value(number=5).resultaat)
 print "Resultaat number=5 :", r5.rstrip(),"<br>"
+
+
+
+r8=str(client.get_value(number=8).resultaat)
+print "Vrije schijfruimte op C: (8):", r8.rstrip(),"<br>"
 print "</p>"
 print '</BODY>'
 print '</HTML>'

@@ -1,4 +1,4 @@
 <config>
-	<hostname>PAS1</hostname>
+	<hostname>10.0.0.16</hostname>
 	<port>8008</port>
 </config>
