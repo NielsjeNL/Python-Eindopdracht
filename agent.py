@@ -36,20 +36,36 @@ def get_value(number):
     if number == 4:
         p=subprocess.Popen(['powershell.exe',    # Atlijd gelijk of volledig pad naar powershell.exe
             '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy | Check eerst of Set-ExecutionPolicy uitgevoerd moet worden
-            '.\\agent_counters.ps1'],  # Naam van en pad naar je PowerShell script | is nu folder waarin .py staat
+            '.\\scripts\\agent_counters.ps1'],   # Pad naar de powershell scripts
         stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
-        output = p.stdout.read()                 # De stdout
+        output = p.stdout.read()                 # De stdout als varaiabele output
         return output
 
     # Example of sing a PowerShell oneliner. Useful for simple PowerShell commands.
     if number == 5:
         p=subprocess.Popen(['powershell',
                             "get-service | measure-object | select -expandproperty count"],
-        stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
-        output = p.stdout.read()                 # De stdout
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()
         return output
 
-    # Powershell: Beschikbaar geheugen
+    # Powershell: Beschikbaar RAM in MB
+    if number == 6:
+        p=subprocess.Popen(['powershell',
+                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()+" MB"
+        return output
+        
+    # Powershell: Eerst beschikbare IP adres
+    if number == 7:
+        p=subprocess.Popen(['powershell',
+                            'Get-NetIPAddress -AddressFamily IPv4 | Select -first 1 IPAddress | Format-Wide'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()
+        return output
+        
+    # Powershell: Beschikbaar geheugen op C:
     if number == 8:
         p=subprocess.Popen(['powershell',
                             """Get-WmiObject Win32_logicaldisk ` | Select -first 1 FreeSpace | 
@@ -57,6 +73,15 @@ def get_value(number):
                             stdout = subprocess.PIPE)
         output = float(p.stdout.read())
         output = str("%.2f" % output)+" GB"
+        return output
+        
+    # Powershell: System uptime
+    if number == 9:
+        p=subprocess.Popen(['powershell.exe',
+            '-ExecutionPolicy', 'Unrestricted',
+            '.\\scripts\\get-uptime.ps1 localhost | Select uptime | Format-Wide'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()
         return output
 
     # Last value

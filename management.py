@@ -59,10 +59,17 @@ print "Resultaat number=4 :", r4.rstrip(),"<br>" # This is a multiline: strip th
 r5=str(client.get_value(number=5).resultaat)
 print "Resultaat number=5 :", r5.rstrip(),"<br>"
 
+r6=str(client.get_value(number=6).resultaat)
+print "Beschikbaar werkgeheugen: (6):", r6.rstrip(),"<br>"
 
+r7=str(client.get_value(number=7).resultaat)
+print "Eerst beschikbare IP-adres: (7):", r7.rstrip(),"<br>"
 
 r8=str(client.get_value(number=8).resultaat)
 print "Vrije schijfruimte op C: (8):", r8.rstrip(),"<br>"
+
+r9=str(client.get_value(number=9).resultaat)
+print "Systeem Uptime (9):", r9.rstrip(),"<br>"
 print "</p>"
 print '</BODY>'
 print '</HTML>'
