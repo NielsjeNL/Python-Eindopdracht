@@ -23,14 +23,15 @@ client = SoapClient(
     namespace = "http://example.com/sample.wsdl",
     soap_ns='soap',
     ns = False)
+# HTML-metadata
+print 'Status: 200 OK\n'
+
 try:
     client.get_value(number=1).resultaat
 except:
     print "<p>Er is iets fout gegaan met het opzetten van de verbinding, controleer adres en poort</p>"
     exit() # tijdens testen eruit laten anders knalt je console eruit lel
-
-# HTML-metadata
-print 'Status: 200 OK\n'
+    
 #De default pagina
 print '<HTML>'
 print '<HEAD>'
@@ -60,7 +61,7 @@ r5=str(client.get_value(number=5).resultaat)
 print "Resultaat number=5 :", r5.rstrip(),"<br>"
 
 r6=str(client.get_value(number=6).resultaat)
-print "Beschikbaar werkgeheugen: (6):", r6.rstrip(),"<br>"
+print "Totaal werkgeheugen: (6):", r6.rstrip(),"<br>"
 
 r7=str(client.get_value(number=7).resultaat)
 print "Eerst beschikbare IP-adres: (7):", r7.rstrip(),"<br>"
