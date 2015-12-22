@@ -21,41 +21,13 @@ def get_value(number):
     if number == 1:
         return sys.platform
 
-    # Another example of a value that is acquired using Python only.
-    # returns a string
     if number == 2:
-        return sys.getdefaultencoding()             
-
-    # Useless of course but returning an int
-    # Hier kunnen we zelf een funcite aan hangen dus
-    if number == 3:
-        return 8888
-
-    # Example in which a PowerShell script is used. The STDOUT is used to pass results back to python.
-    # Exporting with export-csv and reading the CSV using Python is also possible of course.
-    if number == 4:
-        p=subprocess.Popen(['powershell.exe',    # Atlijd gelijk of volledig pad naar powershell.exe
-            '-ExecutionPolicy', 'Unrestricted',  # Override current Execution Policy | Check eerst of Set-ExecutionPolicy uitgevoerd moet worden
-            '.\\scripts\\agent_counters.ps1'],   # Pad naar de powershell scripts
-        stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
-        output = p.stdout.read()                 # De stdout als varaiabele output
-        return output
-
-    # Example of sing a PowerShell oneliner. Useful for simple PowerShell commands.
-    if number == 5:
-        p=subprocess.Popen(['powershell',
-                            "get-service | measure-object | select -expandproperty count"],
+        p=subprocess.Popen(['powershell.exe',
+            '-ExecutionPolicy', 'Unrestricted',
+            '.\\scripts\\services.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
-
-#    # Powershell: Beschikbaar RAM in MB
-#    if number == 6:
-#        p=subprocess.Popen(['powershell',
-#                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
-#        stdout=subprocess.PIPE)
-#        output = p.stdout.read()+" MB"
-#        return output
     # Powershell: Beschikbaar RAM in GB
     if number == 6:
         p=subprocess.Popen(['powershell.exe',

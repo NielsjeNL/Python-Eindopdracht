@@ -1,4 +1,4 @@
 <config>
-	<hostname>10.0.0.16</hostname>
+	<hostname>127.0.0.1</hostname>
 	<port>8008</port>
 </config>

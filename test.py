@@ -8,17 +8,31 @@ import cgi
 import matplotlib.pyplot as pyplot
 import cStringIO
 import cgi, cgitb
+from pysimplesoap.client import SoapClient
+
+client = SoapClient(
+    location = "http://127.0.0.1:8008/",
+    action = "http://127.0.0.1:8008/", # SOAPAction
+    namespace = "http://example.com/sample.wsdl",
+    soap_ns='soap',
+    ns = False)
+
+r2=str(client.get_value(number=2).resultaat)
+waarde=r2.split()
 
 cgitb.enable()
-def generate_graph():
-    pyplot.plot([10,10,10,30,20,25,30,35,70,75,80,10],label='Belasting')
-    pyplot.grid(True)
-    pyplot.title('Processorbelasting gedurende het uur')
-    pyplot.xlabel('Tijd in uren')
-    pyplot.ylabel('Belasting in %')
-    pyplot.legend(loc='upper left') # best / upper/lower/left/right
-    pyplot.axis(ymin=0,ymax=100)
-    #pyplot.show()
+def generate_graphxofx(value1,value2):
+    # Data to plot
+    labels = 'Running', 'Stopped'
+    sizes = [value1, value2]
+    colors = ['gold', 'yellowgreen']
+    explode = (0.1, 0)  # explode 1st slice
+     
+    # Plot
+    pyplot.pie(sizes, explode=explode, labels=labels, colors=colors,
+            autopct='%1.1f%%', shadow=True, startangle=140)
+    pyplot.title('Services')
+    pyplot.axis('equal')
     format = "png"
     sio = cStringIO.StringIO()
     pyplot.savefig(sio, format=format)
@@ -33,7 +47,9 @@ print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'
 print '<TITLE>Test</TITLE>'
 print '</HEAD>'
 print '<BODY>'
+
+print "<p>Running services,total :", r2.split(),"</p>"
 print """
 <p>pyplot dingetje:</p>
-<img src="data:image/png;base64,%s"/>
-</body></html>""" % generate_graph()
+<img height="300px" src="data:image/png;base64,%s"/>
+</body></html>""" % generate_graphxofx(waarde[0],waarde[1])
