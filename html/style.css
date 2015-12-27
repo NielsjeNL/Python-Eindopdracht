@@ -75,10 +75,16 @@ ul, ol {
 	border-bottom: 1px solid #e5e5e5;
 }
 
-.iframe-agents {
+#iframe-agents {
     width: 980px;
     height: 540px;
 }
+
+.functionlist {
+    margin-bottom: -15px;
+    list-style: none;
+}
+
 .footer {
 	font-size: 10px;
 	color: gray;

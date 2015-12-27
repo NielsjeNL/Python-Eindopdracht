@@ -17,6 +17,12 @@
 <li class="header-nav-item"><a class="header-nav-linkc">Agent1</a></li>
 <li class="header-nav-item"><a class="header-nav-link" href="agent2.html">Agent2</a></li>
 </ul>
+<ul class="header-nav right">
+<!--- if page is agent dan onderlinen ofzo-->
+<li class="header-nav-item"><a href="#" class="header-nav-link" alt="Button nieuwe data op te halen van de actieve agents"><img class="header-icon" src="./images/refresh-icon-agent.png"/></a></li>
+<!-- endif -->
+<li class="header-nav-item"><a href="#" class="header-nav-link" alt="Button nieuwe data op te halen van alle agents"><img class="header-icon" src="./images/refresh-icon.png"/></a></li>
+</ul>
 </div>
 </div>
 <div class="main-content">
@@ -24,14 +30,20 @@
 <p>
   Selecteer de counters die opgehaald moeten worden.
 </p>
-<p>
-Placeholder tekst aw yeah
-</p>
 <form action="http://10.0.0.18/management.py" method="post" target="mgmt-iframe">
     <input type="hidden" name="hostname" value="PAS1" />
-    <input type="submit" name="submitform" value="submit form" />
+    <table>
+        <tr><td>Alles ophalen:          </td><td><input type="checkbox" name="fx" value="True"/>Yes</td></tr>
+        <tr><td>Platform-type:          </td><td><input type="checkbox" name="f1" value="True"/>Yes</td></tr>
+        <tr><td>Running en totaal # services:</td><td><input type="checkbox" name="f2" value="True"/>Yes</td></tr>
+        <tr><td>Beschikbaar RAM:        </td><td><input type="checkbox" name="f3" value="True"/>Yes</td></tr>
+        <tr><td>Eerst beschikbaar IP:   </td><td><input type="checkbox" name="f4" value="True"/>Yes</td></tr>
+        <tr><td>Vrij geheugen op C: :   </td><td><input type="checkbox" name="f5" value="True"/>Yes</td></tr>
+        <tr><td>Systeem uptime:         </td><td><input type="checkbox" name="f6" value="True"/>Yes</td></tr>
+    </table>
+    <input type="submit" name="submitform" value="submit form"/>
 </form>
-<iframe name="mgmt-iframe" src="http://10.0.0.18/management.py" class="iframe-agents">
+<iframe name="mgmt-iframe" src="http://10.0.0.18/management.py" id="iframe-agents">
 </iframe>
 </div>
 <div class="container footer">

@@ -10,8 +10,7 @@ configtree = etree.parse('agentconfig.xml')
 # Config inlezen
 port = str(configtree.xpath('/config/port/text()')[0])
 
-# List of all your agent functions that can be called from within the management script.
-# A real developer should do this differently, but this is more easy.
+# functie met daarin een lijstje van alle dingen die we op kunnen vragen
 def get_value(number):
     # return the result of one of the pre-define numbers
     print "get_value, of of item with number=",number
@@ -28,8 +27,8 @@ def get_value(number):
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
-    # Powershell: Beschikbaar RAM in GB
-    if number == 6:
+    # Powershell: Totaal RAM in GB
+    if number == 3:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\memory.ps1'],
@@ -38,7 +37,7 @@ def get_value(number):
         return output
         
     # Powershell: Eerst beschikbare IP adres
-    if number == 7:
+    if number == 4:
         p=subprocess.Popen(['powershell',
                             'Get-NetIPAddress -AddressFamily IPv4 | Select -first 1 IPAddress | Format-Wide'],
         stdout=subprocess.PIPE)
@@ -46,7 +45,7 @@ def get_value(number):
         return output
         
     # Powershell: Beschikbaar geheugen op C:
-    if number == 8:
+    if number == 5:
         p=subprocess.Popen(['powershell',
                             """Get-WmiObject Win32_logicaldisk ` | Select -first 1 FreeSpace | 
                                ForEach-Object {$_.freespace / 1GB}"""],
@@ -56,7 +55,7 @@ def get_value(number):
         return output
         
     # Powershell: System uptime
-    if number == 9:
+    if number == 6:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\get-uptime.ps1 localhost | Select uptime | Format-Wide'],
