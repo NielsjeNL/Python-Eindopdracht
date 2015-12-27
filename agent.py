@@ -36,6 +36,15 @@ def get_value(number):
         output = p.stdout.read()+" GB"
         return output
         
+        
+    # Powershell: Beschikbaar RAM in MB
+    if number == 31:
+        p=subprocess.Popen(['powershell',
+                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()+" MB"
+        return output
+   
     # Powershell: Eerst beschikbare IP adres
     if number == 4:
         p=subprocess.Popen(['powershell',
@@ -62,7 +71,15 @@ def get_value(number):
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
-
+        
+    # Powershell: Aantal ingelogde gebruikers teruggeven
+    if number == 7:
+        p=subprocess.Popen(['powershell.exe',
+            '-ExecutionPolicy', 'Unrestricted',
+            '.\\scripts\\get-loggedonusers.ps1'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()
+        return output
     # Last value
     return None
 
