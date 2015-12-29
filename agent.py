@@ -33,17 +33,18 @@ def get_value(number):
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\memory.ps1'],
         stdout=subprocess.PIPE)
-        output = p.stdout.read()+" GB"
+        output = p.stdout.read()
         return output
         
         
-    # Powershell: Beschikbaar RAM in MB
-    if number == 31:
-        p=subprocess.Popen(['powershell',
-                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
-        stdout=subprocess.PIPE)
-        output = p.stdout.read()+" MB"
-        return output
+# dit is nu verwerkt in nummer 3
+#    # Powershell: Beschikbaar RAM in MB
+#    if number == 31:
+#        p=subprocess.Popen(['powershell',
+#                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
+#        stdout=subprocess.PIPE)
+#        output = p.stdout.read()+" MB"
+#        return output
    
     # Powershell: Eerst beschikbare IP adres
     if number == 4:

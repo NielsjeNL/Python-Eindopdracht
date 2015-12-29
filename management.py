@@ -73,12 +73,12 @@ if f2 or fx:
 if f3 or fx:
     r3=str(client.get_value(number=3).resultaat)
     print "<tr><td>"
-    print "Totaal werkgeheugen:</td><td>", r3.rstrip(),"</td></tr>"
+    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
 
-if f31 or fx:
-    r31=str(client.get_value(number=31).resultaat)
-    print "<tr><td>"
-    print "Beschikbaar werkgeheugen:</td><td>", r31.rstrip(),"</td></tr>"
+#if f31 or fx:
+#    r31=str(client.get_value(number=31).resultaat)
+#    print "<tr><td>"
+#    print "Beschikbaar werkgeheugen:</td><td>", r31.rstrip(),"</td></tr>"
 
 if f4 or fx:
     r4=str(client.get_value(number=4).resultaat)

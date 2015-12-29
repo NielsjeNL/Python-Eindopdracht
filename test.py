@@ -17,13 +17,14 @@ client = SoapClient(
     soap_ns='soap',
     ns = False)
 
-r2=str(client.get_value(number=2).resultaat)
-waarde=r2.split()
+r3=str(client.get_value(number=3).resultaat)
+waarde=r3.split()
+
 
 cgitb.enable()
 def generate_graphxofx(value1,value2):
     # Data to plot
-    labels = 'Running', 'Stopped'
+    labels = 'gebruikt', 'Vrij'
     sizes = [value1, value2]
     colors = ['gold', 'yellowgreen']
     explode = (0.1, 0)  # explode 1st slice
@@ -31,7 +32,7 @@ def generate_graphxofx(value1,value2):
     # Plot
     pyplot.pie(sizes, explode=explode, labels=labels, colors=colors,
             autopct='%1.1f%%', shadow=True, startangle=140)
-    pyplot.title('Services')
+    pyplot.title('Geheugen')
     pyplot.axis('equal')
     format = "png"
     sio = cStringIO.StringIO()
@@ -48,8 +49,8 @@ print '<TITLE>Test</TITLE>'
 print '</HEAD>'
 print '<BODY>'
 
-print "<p>Running services,total :", r2.split(),"</p>"
+print "<p>Geheugen data :", r3.split(),"</p>"
 print """
 <p>pyplot dingetje:</p>
 <img height="300px" src="data:image/png;base64,%s"/>
-</body></html>""" % generate_graphxofx(waarde[0],waarde[1])
+</body></html>""" % generate_graphxofx(int(waarde[0])-int(waarde[1]),waarde[1])

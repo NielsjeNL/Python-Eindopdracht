@@ -5,8 +5,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>Agent1 pagina</title>
   <link href="style.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="http://10.0.0.18/images/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="http://10.0.0.18/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
+  <script language="javascript" type="text/javascript">
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
 </head>
 
 <body>
@@ -30,15 +35,15 @@
 <p>
   Selecteer de counters die opgehaald moeten worden.
 </p>
-<form action="http://10.0.0.18/management.py" method="post" target="mgmt-iframe">
-    <input type="hidden" name="hostname" value="PAS1" />
+<form action="../management.py" method="post" target="mgmt-iframe">
+    <input type="hidden" name="hostname" value="JASPER-PC" />
     <table>
         <tr><td style="border-bottom: solid; border-bottom-width: 2px;">Alles ophalen:</td>
             <td style="border-bottom: solid; border-bottom-width: 2px;"><input type="checkbox" name="fx" value="True"/>Yes</td></tr>
         <tr><td>Platform-type:          </td><td><input type="checkbox" name="f1" value="True"/>Yes</td></tr>
         <tr><td>Running en totaal # services:</td><td><input type="checkbox" name="f2" value="True"/>Yes</td></tr>
         <tr><td>Totaal RAM:             </td><td><input type="checkbox" name="f3" value="True"/>Yes</td></tr>
-        <tr><td>Beschikbaar RAM:        </td><td><input type="checkbox" name="f31" value="True"/>Yes</td></tr>
+        <!-- overbodig<tr><td>Beschikbaar RAM:        </td><td><input type="checkbox" name="f31" value="True"/>Yes</td></tr>-->
         <tr><td>Eerst beschikbaar IP:   </td><td><input type="checkbox" name="f4" value="True"/>Yes</td></tr>
         <tr><td>Vrij geheugen op C: :   </td><td><input type="checkbox" name="f5" value="True"/>Yes</td></tr>
         <tr><td>Systeem uptime:         </td><td><input type="checkbox" name="f6" value="True"/>Yes</td></tr>
@@ -46,7 +51,7 @@
     </table>
     <input type="submit" name="submitform" value="submit form"/>
 </form>
-<iframe name="mgmt-iframe" src="http://10.0.0.18/management.py" id="iframe-agents">
+<iframe name="mgmt-iframe" id="iframe-agents" onload="resizeIframe(this)"scrolling="no" seamless="seamless">
 </iframe>
 </div>
 <div class="container footer">
