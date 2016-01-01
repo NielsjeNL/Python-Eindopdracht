@@ -22,7 +22,7 @@ waarde=r3.split()
 
 
 cgitb.enable()
-def generate_graphxofx(value1,value2):
+def gen_pie_xofx(value1,value2):
     # Data to plot
     labels = 'gebruikt', 'Vrij'
     sizes = [value1, value2]
@@ -32,7 +32,6 @@ def generate_graphxofx(value1,value2):
     # Plot
     pyplot.pie(sizes, explode=explode, labels=labels, colors=colors,
             autopct='%1.1f%%', shadow=True, startangle=140)
-    pyplot.title('Geheugen')
     pyplot.axis('equal')
     format = "png"
     sio = cStringIO.StringIO()
@@ -53,4 +52,4 @@ print "<p>Geheugen data :", r3.split(),"</p>"
 print """
 <p>pyplot dingetje:</p>
 <img height="300px" src="data:image/png;base64,%s"/>
-</body></html>""" % generate_graphxofx(int(waarde[0])-int(waarde[1]),waarde[1])
+</body></html>""" % gen_pie_xofx(int(waarde[0])-int(waarde[1]),waarde[1])

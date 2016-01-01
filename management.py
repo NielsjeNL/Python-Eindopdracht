@@ -2,6 +2,8 @@ from pysimplesoap.client import SoapClient, SoapFault
 from lxml import etree
 import cgi, cgitb
 import datetime
+import matplotlib.pyplot as plt
+import cStringIO
 cgitb.enable()
 
 # ---------------------------------------------------------
@@ -24,6 +26,28 @@ hostname = str(configtree.xpath('/config/hostname/text()')[0])
 port = str(configtree.xpath('/config/port/text()')[0])
 
 # ---------------------------------------------------------
+
+# ---------------------------------------------------------
+# Grafieken genereren defines
+def gen_used_bar(gebruikt, totaal):
+    '''Maakt een horizontale balk met percentage gebruikt en vrij '''
+    pctused = float(gebruikt)/float(totaal)
+    maximaal = 1-pctused
+    fig = plt.figure(figsize=(8, 2))
+    width = 1
+    #plt.xlabel('Totaal: '+str(totaal))
+    p1 = plt.barh(0, pctused,width,color='r')
+    p2 = plt.barh(0, maximaal,width,color='y',left=pctused)
+    plt.legend((p1[0], p2[0]), ('Gebruikt', 'Vrij'))
+    frame = plt.gca()
+    frame.axes.get_yaxis().set_visible(False)
+    #plt.show()
+    format = "png"
+    sio = cStringIO.StringIO()
+    plt.savefig(sio, format=format)
+    return sio.getvalue().encode("base64").strip()
+# ---------------------------------------------------------
+
 # HTML-metadata
 print 'Status: 200 OK\n'
 
@@ -51,12 +75,10 @@ except:
 print '<HTML>'
 print '<HEAD>'
 print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'
+print '<link href="html/style.css" rel="stylesheet" type="text/css">'
 print '<TITLE>Management script</TITLE>'
 print '</HEAD>'
-print '<BODY>'
-print '<h1 style="margin-bottom: -15px;">Resultaten</h1>'
-print '<p>Waardes opgehaald om: ',datetime.datetime.now().time().strftime('%H:%H:%S'),'</p>'
-print "Resultaten:<br>"
+print '<p>Waardes opgehaald om: ',datetime.datetime.now().time().strftime('%H:%M:%S'),'</p>'
 print "<table>"
 # resultaten ophalen van de agent
 # als fnummer of fx waar (True) is worden de counters opgehaald
@@ -70,10 +92,11 @@ if f2 or fx:
     print "<tr><td>"
     print "Running en totaal aantal services:</td><td>", r2.split(),"</td></tr>"
 
-if f3 or fx:
-    r3=str(client.get_value(number=3).resultaat)
-    print "<tr><td>"
-    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
+# uit de table gehaald voor nieuwe opmaakt type
+#if f3 or fx:
+#    r3=str(client.get_value(number=3).resultaat)
+#    print "<tr><td>"
+#    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
 
 #if f31 or fx:
 #    r31=str(client.get_value(number=31).resultaat)
@@ -100,5 +123,14 @@ if f7 or fx:
     print "<tr><td>"
     print "Aantal ingelogde gebruikers:</td><td>", r7.rstrip(),"</td></tr>"
 print '</table>'
-print '</BODY>'
+
+if f3 or fx:
+    r3=str(client.get_value(number=3).resultaat).split()
+    print """<div class="item-wd-2-4">
+            	<div class="item-content">
+            		<h1>Werkgeheugen</h1>
+            		<p>Op dit moment is er %s MB beschikbaar van de %s MB</p>
+            		<img src="data:image/png;base64,%s"/>
+            	</div>
+            </div>""" % (r3[1],r3[0],gen_used_bar(int(r3[0])-int(r3[1]),r3[0]))
 print '</HTML>'
