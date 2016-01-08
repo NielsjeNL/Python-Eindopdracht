@@ -1,4 +1,6 @@
 <config>
 	<hostname>127.0.0.1</hostname>
 	<port>8008</port>
+      <logfile>management.log</logfile>
+      <loglevel>WARNING</loglevel>
 </config>

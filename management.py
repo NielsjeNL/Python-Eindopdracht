@@ -4,6 +4,7 @@ import cgi, cgitb
 import datetime
 import matplotlib.pyplot as plt
 import cStringIO
+import logging
 cgitb.enable()
 
 # ---------------------------------------------------------
@@ -19,13 +20,25 @@ f4  = form.getvalue('f4')
 f5  = form.getvalue('f5')
 f6  = form.getvalue('f6')
 f7  = form.getvalue('f7')
+
 # ---------------------------------------------------------
 # Config inlezen
 configtree = etree.parse('mgmtconfig.xml')
 hostname = str(configtree.xpath('/config/hostname/text()')[0])
 port = str(configtree.xpath('/config/port/text()')[0])
-
-# ---------------------------------------------------------
+# Logging opzetten
+logfile = str(configtree.xpath('/config/logfile/text()')[0])
+loglevel = str(configtree.xpath('/config/loglevel/text()')[0])
+logger = logging.getLogger()
+logger.setLevel(loglevel)
+# file handler maken, deze schrijft uiteindelijk het log weg
+handler = logging.FileHandler(logfile)
+handler.setLevel(loglevel)
+# format voor het log
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+# handler toevoegen aan het log, let op dat je dit maar één keer doet anders krijg je dubbele logs
+logger.addHandler(handler)
 
 # ---------------------------------------------------------
 # Grafieken genereren defines
@@ -64,18 +77,21 @@ client = SoapClient(
     soap_ns='soap',
     ns = False)
 
+logger.warning('--------------BEGIN LOG--------------')
+logging.warning('Script is begonnen')  
+
 # Verbinding testen en fout weergeven als deze niet werkt
 try:
     client.get_value(number=1).resultaat
 except:
     print "<p>Er is iets fout gegaan met het opzetten van de verbinding, controleer adres en poort</p>"
     exit()
-    
+  
 # HTML-data
 print '<HTML>'
 print '<HEAD>'
 print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'
-print '<link href="html/style.css" rel="stylesheet" type="text/css">'
+print '<link href="style.css" rel="stylesheet" type="text/css">'
 print '<TITLE>Management script</TITLE>'
 print '</HEAD>'
 print '<p>Waardes opgehaald om: ',datetime.datetime.now().time().strftime('%H:%M:%S'),'</p>'
@@ -83,15 +99,18 @@ print "<table>"
 # resultaten ophalen van de agent
 # als fnummer of fx waar (True) is worden de counters opgehaald
 if f1 or fx:
+    logging.warning('Functie 1 opgevraagd')
     r1=str(client.get_value(number=1).resultaat)
     print "<tr><td>"
     print "Platform type:</td><td>", r1,"</td></tr>"
+    logging.warning('Functie 1 ontvangen')
 
 if f2 or fx:
+    logging.warning('Functie 2 opgevraagd')    
     r2=str(client.get_value(number=2).resultaat)
     print "<tr><td>"
     print "Running en totaal aantal services:</td><td>", r2.split(),"</td></tr>"
-
+    logging.warning('Functie 2 ontvangen')
 # uit de table gehaald voor nieuwe opmaakt type
 #if f3 or fx:
 #    r3=str(client.get_value(number=3).resultaat)
@@ -104,27 +123,36 @@ if f2 or fx:
 #    print "Beschikbaar werkgeheugen:</td><td>", r31.rstrip(),"</td></tr>"
 
 if f4 or fx:
+    logging.warning('Functie 4 opgevraagd')
     r4=str(client.get_value(number=4).resultaat)
     print "<tr><td>"
     print "Eerst beschikbare IP-adres:</td><td>", r4.rstrip(),"</td></tr>"
+    logging.warning('Functie 4 ontvangen')
 
 if f5 or fx:
+    logging.warning('Functie 5 opgevraagd')
     r5=str(client.get_value(number=5).resultaat)
     print "<tr><td>"
     print "Vrije schijfruimte op C: :</td><td>", r5.rstrip(),"</td></tr>"
+    logging.warning('Functie 5 ontvangen')
 
 if f6 or fx:
+    logging.warning('Functie 6 opgevraagd')
     r6=str(client.get_value(number=6).resultaat)
     print "<tr><td>"
     print "Systeem Uptime:</td><td>", r6.rstrip(),"</td></tr>"
+    logging.warning('Functie 6 ontvangen')
     
 if f7 or fx:
+    logging.warning('Functie 7 opgevraagd')
     r7=str(client.get_value(number=7).resultaat)
     print "<tr><td>"
     print "Aantal ingelogde gebruikers:</td><td>", r7.rstrip(),"</td></tr>"
+    logging.warning('Functie 7 ontvangen')
 print '</table>'
 
 if f3 or fx:
+    logging.warning('Functie 3 opgevraagd')
     r3=str(client.get_value(number=3).resultaat).split()
     print """<div class="item-wd-2-4">
             	<div class="item-content">
@@ -133,4 +161,9 @@ if f3 or fx:
             		<img src="data:image/png;base64,%s"/>
             	</div>
             </div>""" % (r3[1],r3[0],gen_used_bar(int(r3[0])-int(r3[1]),r3[0]))
+    logging.warning('Functie 3 ontvangen')
 print '</HTML>'
+
+logger.warning('---------------END LOG---------------')
+handler.close()
+logger.removeHandler(handler)

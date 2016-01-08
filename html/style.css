@@ -78,6 +78,10 @@ ul, ol {
 	border-bottom: 1px solid #e5e5e5;
 }
 
+#form-agents {
+	margin-left: -2px;
+}
+
 #iframe-agents {
     width: 100%;
     height: 0;
