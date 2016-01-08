@@ -2,9 +2,9 @@
 #$waarde = $_.TotalVisibleMemorySize/1000000 
 #"{0:N1}" -f $waarde
 #} 
-
-$totaal = (systeminfo | Select-String 'Total Physical Memory:').ToString().Split(':')[1].Trim()
-$vrij = (systeminfo | Select-String 'Available Physical Memory:').ToString().Split(':')[1].Trim()
+$info = systeminfo
+$totaal = ($info | Select-String 'Total Physical Memory:').ToString().Split(':')[1].Trim()
+$vrij = ($info | Select-String 'Available Physical Memory:').ToString().Split(':')[1].Trim()
 
 $totaal = $totaal -replace ('\.', '')
 $totaal = $totaal -replace (',', '')
