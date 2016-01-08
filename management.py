@@ -5,9 +5,9 @@ import datetime
 import matplotlib.pyplot as plt
 import cStringIO
 import logging
+import csv
 cgitb.enable()
 
-# ---------------------------------------------------------
 # Variabelen aanmaken
 form = cgi.FieldStorage()
 hostnameHTTP = form.getvalue('hostname')
@@ -21,11 +21,12 @@ f5  = form.getvalue('f5')
 f6  = form.getvalue('f6')
 f7  = form.getvalue('f7')
 
-# ---------------------------------------------------------
+
 # Config inlezen
 configtree = etree.parse('mgmtconfig.xml')
 hostname = str(configtree.xpath('/config/hostname/text()')[0])
 port = str(configtree.xpath('/config/port/text()')[0])
+
 # Logging opzetten
 logfile = str(configtree.xpath('/config/logfile/text()')[0])
 loglevel = str(configtree.xpath('/config/loglevel/text()')[0])
@@ -39,6 +40,16 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 # handler toevoegen aan het log, let op dat je dit maar één keer doet anders krijg je dubbele logs
 logger.addHandler(handler)
+# begin van het log schrijven
+logger.warning('--------------BEGIN LOG--------------')
+logger.warning('Script is begonnen')  
+
+# CSV bestand opzetten
+csvfilename = 'management-'+hostname+'.csv'
+csvf  = open(csvfilename, 'a') 
+csvwriter = csv.writer(csvf,lineterminator='\n')
+print datetime.date.today()
+#next(csvwriter)
 
 # ---------------------------------------------------------
 # Grafieken genereren defines
@@ -77,8 +88,7 @@ client = SoapClient(
     soap_ns='soap',
     ns = False)
 
-logger.warning('--------------BEGIN LOG--------------')
-logging.warning('Script is begonnen')  
+
 
 # Verbinding testen en fout weergeven als deze niet werkt
 try:
@@ -98,61 +108,74 @@ print '<p>Waardes opgehaald om: ',datetime.datetime.now().time().strftime('%H:%M
 print "<table>"
 # resultaten ophalen van de agent
 # als fnummer of fx waar (True) is worden de counters opgehaald
+# Platform-type
 if f1 or fx:
-    logging.warning('Functie 1 opgevraagd')
+    logger.warning('Functie 1 opgevraagd')
     r1=str(client.get_value(number=1).resultaat)
     print "<tr><td>"
     print "Platform type:</td><td>", r1,"</td></tr>"
-    logging.warning('Functie 1 ontvangen')
-
+    logger.warning('Functie 1 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Platform', r1.rstrip()))
+# Running en totaal # services
 if f2 or fx:
-    logging.warning('Functie 2 opgevraagd')    
+    logger.warning('Functie 2 opgevraagd')    
     r2=str(client.get_value(number=2).resultaat)
     print "<tr><td>"
     print "Running en totaal aantal services:</td><td>", r2.split(),"</td></tr>"
-    logging.warning('Functie 2 ontvangen')
-# uit de table gehaald voor nieuwe opmaakt type
-#if f3 or fx:
-#    r3=str(client.get_value(number=3).resultaat)
-#    print "<tr><td>"
-#    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
+    logger.warning('Functie 2 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Running, totaal # services', r2.rstrip()))
 
-#if f31 or fx:
-#    r31=str(client.get_value(number=31).resultaat)
-#    print "<tr><td>"
-#    print "Beschikbaar werkgeheugen:</td><td>", r31.rstrip(),"</td></tr>"
-
+# Totaal RAM
+# ik zet deze ff terug om het resultaat ook in de lijst te laten weergeven
+# dan wordt het voor mij wat overzichtelijker xd ~Niels
+if f3 or fx:
+    r3=str(client.get_value(number=3).resultaat)
+    print "<tr><td>"
+    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Totaal RAM', r3.rstrip()))
+# PS: Eerst beschikbaar IP
 if f4 or fx:
-    logging.warning('Functie 4 opgevraagd')
+    logger.warning('Functie 4 opgevraagd')
     r4=str(client.get_value(number=4).resultaat)
     print "<tr><td>"
     print "Eerst beschikbare IP-adres:</td><td>", r4.rstrip(),"</td></tr>"
-    logging.warning('Functie 4 ontvangen')
-
+    logger.warning('Functie 4 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Eerste IP', r4.rstrip()))
+# PS: Beschikbaar gehugen op C:
 if f5 or fx:
-    logging.warning('Functie 5 opgevraagd')
+    logger.warning('Functie 5 opgevraagd')
     r5=str(client.get_value(number=5).resultaat)
     print "<tr><td>"
     print "Vrije schijfruimte op C: :</td><td>", r5.rstrip(),"</td></tr>"
-    logging.warning('Functie 5 ontvangen')
-
+    logger.warning('Functie 5 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                        hostname, 'Geheugen op C:', r5.rstrip()))
+# PS: System Uptime
 if f6 or fx:
-    logging.warning('Functie 6 opgevraagd')
+    logger.warning('Functie 6 opgevraagd')
     r6=str(client.get_value(number=6).resultaat)
     print "<tr><td>"
     print "Systeem Uptime:</td><td>", r6.rstrip(),"</td></tr>"
-    logging.warning('Functie 6 ontvangen')
-    
+    logger.warning('Functie 6 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'System uptime', r6.rstrip()))
+# PS: Aantal ingelogde users
 if f7 or fx:
-    logging.warning('Functie 7 opgevraagd')
+    logger.warning('Functie 7 opgevraagd')
     r7=str(client.get_value(number=7).resultaat)
     print "<tr><td>"
     print "Aantal ingelogde gebruikers:</td><td>", r7.rstrip(),"</td></tr>"
-    logging.warning('Functie 7 ontvangen')
+    logger.warning('Functie 7 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Aantal ingelogde users', r7.rstrip()))
 print '</table>'
 
 if f3 or fx:
-    logging.warning('Functie 3 opgevraagd')
+    logger.warning('Functie 3 opgevraagd')
     r3=str(client.get_value(number=3).resultaat).split()
     print """<div class="item-wd-2-4">
             	<div class="item-content">
@@ -161,9 +184,12 @@ if f3 or fx:
             		<img src="data:image/png;base64,%s"/>
             	</div>
             </div>""" % (r3[1],r3[0],gen_used_bar(int(r3[0])-int(r3[1]),r3[0]))
-    logging.warning('Functie 3 ontvangen')
+    logger.warning('Functie 3 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostname, 'Totaal en vrij RAM', r3.rstrip()))
 print '</HTML>'
 
 logger.warning('---------------END LOG---------------')
 handler.close()
 logger.removeHandler(handler)
+csvf.close()

@@ -19,7 +19,7 @@ def get_value(number):
     # returns a string
     if number == 1:
         return sys.platform
-
+    # Running en totaal # services
     if number == 2:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
@@ -49,9 +49,10 @@ def get_value(number):
     # Powershell: Eerst beschikbare IP adres
     if number == 4:
         p=subprocess.Popen(['powershell',
-                            'Get-NetIPAddress -AddressFamily IPv4 | Select -first 1 IPAddress | Format-Wide'],
+                            '.\\scripts\\get-firstIP.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
+        output = output.rstrip()
         return output
         
     # Powershell: Beschikbaar geheugen op C:
@@ -68,7 +69,7 @@ def get_value(number):
     if number == 6:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
-            '.\\scripts\\get-uptime.ps1 localhost | Select uptime | Format-Wide'],
+            '.\\scripts\\get-uptime.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
