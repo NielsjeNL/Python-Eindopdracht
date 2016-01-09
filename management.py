@@ -1,9 +1,8 @@
 from pysimplesoap.client import SoapClient, SoapFault
 from lxml import etree
+import graphs     # Graphs is graphs.py
 import cgi, cgitb
 import datetime
-import matplotlib.pyplot as plt
-import cStringIO
 import logging
 import csv
 cgitb.enable()
@@ -11,12 +10,10 @@ cgitb.enable()
 # Variabelen aanmaken
 form = cgi.FieldStorage()
 hostnameHTTP = form.getvalue('hostname')
-hostnameHTTP = 'PAS1'
 fx = form.getvalue('fx') # fx haalt alles op, fnummer alleen zijn eigen functie
 #fx = True
 f1  = form.getvalue('f1')
 f2  = form.getvalue('f2')
-f2 = True
 f3  = form.getvalue('f3')
 f31  = form.getvalue('f31')
 f4  = form.getvalue('f4')
@@ -54,25 +51,7 @@ csvwriter = csv.writer(csvf,lineterminator='\n')
 #next(csvwriter)
 
 # ---------------------------------------------------------
-# Grafieken genereren defines
-def gen_used_bar(gebruikt, totaal):
-    '''Maakt een horizontale balk met percentage gebruikt en vrij '''
-    pctused = float(gebruikt)/float(totaal)
-    maximaal = 1-pctused
-    fig = plt.figure(figsize=(8, 2))
-    width = 1
-    #plt.xlabel('Totaal: '+str(totaal))
-    p1 = plt.barh(0, pctused,width,color='r')
-    p2 = plt.barh(0, maximaal,width,color='y',left=pctused)
-    plt.legend((p1[0], p2[0]), ('Gebruikt', 'Vrij'))
-    frame = plt.gca()
-    frame.axes.get_yaxis().set_visible(False)
-    #plt.show()
-    format = "png"
-    sio = cStringIO.StringIO()
-    plt.savefig(sio, format=format)
-    return sio.getvalue().encode("base64").strip()
-# ---------------------------------------------------------
+
 
 # HTML-metadata
 print 'Status: 200 OK\n'
@@ -184,7 +163,7 @@ if f3 or fx:
             		<p>Op dit moment is er %s MB beschikbaar van de %s MB</p>
             		<img src="data:image/png;base64,%s"/>
             	</div>
-            </div>""" % (r3[1],r3[0],gen_used_bar(int(r3[0])-int(r3[1]),r3[0]))
+            </div>""" % (r3[1],r3[0],graphs.memory_used_bar(int(r3[0])-int(r3[1]),r3[0]))
     logger.warning('Functie 3 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
                          hostname, 'Totaal en vrij RAM', r3))

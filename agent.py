@@ -13,7 +13,7 @@ port = str(configtree.xpath('/config/port/text()')[0])
 # functie met daarin een lijstje van alle dingen die we op kunnen vragen
 def get_value(number):
     # return the result of one of the pre-define numbers
-    print "get_value, of of item with number=",number
+    print "WAARDE OPGEVRAAGD MET NUMMER ",number
 
     # An example of a value that is acquired using Python only.
     # returns a string
