@@ -27,6 +27,7 @@ def get_value(number):
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
+        
     # Powershell: Totaal RAM in GB
     if number == 3:
         p=subprocess.Popen(['powershell.exe',

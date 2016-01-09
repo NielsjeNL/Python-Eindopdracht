@@ -11,9 +11,12 @@ cgitb.enable()
 # Variabelen aanmaken
 form = cgi.FieldStorage()
 hostnameHTTP = form.getvalue('hostname')
+hostnameHTTP = 'PAS1'
 fx = form.getvalue('fx') # fx haalt alles op, fnummer alleen zijn eigen functie
+#fx = True
 f1  = form.getvalue('f1')
 f2  = form.getvalue('f2')
+f2 = True
 f3  = form.getvalue('f3')
 f31  = form.getvalue('f31')
 f4  = form.getvalue('f4')
@@ -38,7 +41,7 @@ handler.setLevel(loglevel)
 # format voor het log
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
-# handler toevoegen aan het log, let op dat je dit maar één keer doet anders krijg je dubbele logs
+# handler toevoegen aan het log, let op dat je dit maar 1 keer doet anders krijg je dubbele logs
 logger.addHandler(handler)
 # begin van het log schrijven
 logger.warning('--------------BEGIN LOG--------------')
@@ -48,7 +51,6 @@ logger.warning('Script is begonnen')
 csvfilename = 'management-'+hostname+'.csv'
 csvf  = open(csvfilename, 'a') 
 csvwriter = csv.writer(csvf,lineterminator='\n')
-print datetime.date.today()
 #next(csvwriter)
 
 # ---------------------------------------------------------
@@ -122,7 +124,7 @@ if f2 or fx:
     logger.warning('Functie 2 opgevraagd')    
     r2=str(client.get_value(number=2).resultaat)
     print "<tr><td>"
-    print "Running en totaal aantal services:</td><td>", r2.split(),"</td></tr>"
+    print "Running en totaal aantal services:</td><td>", r2.strip(),"</td></tr>"
     logger.warning('Functie 2 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
                          hostname, 'Running, totaal # services', r2.rstrip()))
@@ -133,9 +135,8 @@ if f2 or fx:
 if f3 or fx:
     r3=str(client.get_value(number=3).resultaat)
     print "<tr><td>"
-    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3.split(),"</td></tr>"
-    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Totaal RAM', r3.rstrip()))
+    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3,"</td></tr>"
+    
 # PS: Eerst beschikbaar IP
 if f4 or fx:
     logger.warning('Functie 4 opgevraagd')
@@ -186,7 +187,7 @@ if f3 or fx:
             </div>""" % (r3[1],r3[0],gen_used_bar(int(r3[0])-int(r3[1]),r3[0]))
     logger.warning('Functie 3 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Totaal en vrij RAM', r3.rstrip()))
+                         hostname, 'Totaal en vrij RAM', r3))
 print '</HTML>'
 
 logger.warning('---------------END LOG---------------')
