@@ -83,6 +83,11 @@ def get_value(number):
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         return output
+        
+    if number == 999:
+        output = 'Verbinding OK'
+        return output
+
     # Last value
     return None
 

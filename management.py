@@ -49,9 +49,7 @@ csvfilename = 'management-'+hostname+'.csv'
 csvf  = open(csvfilename, 'a') 
 csvwriter = csv.writer(csvf,lineterminator='\n')
 #next(csvwriter)
-
 # ---------------------------------------------------------
-
 
 # HTML-metadata
 print 'Status: 200 OK\n'
@@ -69,11 +67,10 @@ client = SoapClient(
     soap_ns='soap',
     ns = False)
 
-
-
 # Verbinding testen en fout weergeven als deze niet werkt
+# Het getal heb ik 999 van gemaakt want dan kan je op de server handig zien wat gebeurt etc idk ~N
 try:
-    client.get_value(number=1).resultaat
+    client.get_value(number=999).resultaat
 except:
     print "<p>Er is iets fout gegaan met het opzetten van de verbinding, controleer adres en poort</p>"
     exit()
@@ -125,7 +122,7 @@ if f4 or fx:
     logger.warning('Functie 4 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
                          hostname, 'Eerste IP', r4.rstrip()))
-# PS: Beschikbaar gehugen op C:
+# PS: Beschikbaar geheugen op C:
 if f5 or fx:
     logger.warning('Functie 5 opgevraagd')
     r5=str(client.get_value(number=5).resultaat)
