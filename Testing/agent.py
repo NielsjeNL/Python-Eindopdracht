@@ -3,28 +3,24 @@ from BaseHTTPServer import HTTPServer
 from lxml import etree
 import sys,subprocess
 # ---------------------------------------------------------
-# Variabelen aanmaken
-#configtree = etree.parse('agentconfig.xml')
-
-# ---------------------------------------------------------
 # Config inlezen
-#port = str(configtree.xpath('/config/port/text()')[0])
-port = '8009'
+configtree = etree.parse('agentconfig.xml')
+port = str(configtree.xpath('/config/port/text()')[0])
 
 def echo(request):
     "Copy request->response (generic, any type)"
     return request.value
     
 # functie met daarin een lijstje van alle dingen die we op kunnen vragen
-def get_value(platform=False, ip=False, loggedinusers=False, services=False, freespace=False,systeminfo=False, ram=False, uptime=False):
-    # return the result of one of the pre-define numbers
+def get_value(platform=False, ip=False, loggedinusers=False, services=False, freespace=False, ram=False, uptime=False):
+    ''' Geeft waarden terug van de opgevraagde gegevens in een directory '''    
     response ={}    
-    print "WAARDES OPGEVRAAGD MET NUMMER ", platform, ip, loggedinusers, services, freespace,systeminfo, ram, uptime
-    #response = {'platform':'','services':'','ram':'','ip':'','freespace':'','uptime':'','loggedinusers':''}
-    # An example of a value that is acquired using Python only.
-    # returns a string
+    print "WAARDES OPGEVRAAGD platform", platform,"ip", ip,"loggedin users", loggedinusers,"services", services,"freespace", freespace,"ram", ram,"uptime", uptime
+
+    # Opvragen platform type terug
     if platform == True:
         response['platform'] = sys.platform
+        
     # Running en totaal # services
     if services == True:
         p=subprocess.Popen(['powershell.exe',
@@ -42,16 +38,6 @@ def get_value(platform=False, ip=False, loggedinusers=False, services=False, fre
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         response['ram'] = output
-        
-        
-# dit is nu verwerkt in nummer 3
-#    # Powershell: Beschikbaar RAM in MB
-#    if number == 31:
-#        p=subprocess.Popen(['powershell',
-#                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
-#        stdout=subprocess.PIPE)
-#        output = p.stdout.read()+" MB"
-#        return output
    
     # Powershell: Eerst beschikbare IP adres
     if ip == True:
@@ -106,10 +92,8 @@ dispatcher = SoapDispatcher(
 # do not change anything unless you know what you're doing.
 dispatcher.register_function('get_value', get_value,
     returns={'resultaat': [{str: str}] } ,   # return data type
-#    returns = {'resultaat': [{'platform':str, 'ip':str, 'loggedinusers':str, 'services':str, 'freespace':str,
-#          'systeminfo':str, 'ram':str, 'uptime':str}]},
     args={'platform':bool, 'ip':bool, 'loggedinusers':bool, 'services':bool, 'freespace':bool,
-          'systeminfo':bool, 'ram':bool, 'uptime':bool}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.
+          'ram':bool, 'uptime':bool}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.
     )
 
 dispatcher.register_function('Echo', echo)
