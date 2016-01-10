@@ -36,7 +36,9 @@ for i in systems:
     host = i.xpath('./host')[0].text
     port = i.xpath('./port')[0].text
     serveragent[i.get('name')] = agent(name, host, port)
-    logger.warning('agent aangemaakt: '+serveragent[i.get('name')].name+' '+serveragent[i.get('name')].host+' '+serveragent[i.get('name')].port)
+    print (serveragent[i.get('name')])
+    
+    logger.warning('agent aangemaakt: '+serveragent[i.get('name')].name+' '+serveragent[i.get('name')].host+':'+serveragent[i.get('name')].port)
     logger.warning('verbinding check '+str(serveragent[i.get('name')].online))
 
 

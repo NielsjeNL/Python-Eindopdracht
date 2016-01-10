@@ -4,6 +4,8 @@ Beschrijving van bestand
 
 """
 from pysimplesoap.client import SoapClient
+import datetime
+import csv
 
 class agent():
     ''' Class agent waarin de agentobjecten worden aangemaakt '''  
@@ -17,8 +19,10 @@ class agent():
                                  soap_ns='soap',
                                  ns = False)
         self.online = self.checkconnection()
-        print 'agent aangemaakt:',self.name, self.host,self.port
-        print 'verbinding check', self.online
+        self.csvfilename = 'management-'+self.name+'.csv'
+        
+    def __str__(self):
+        return ("Agent aangemaakt: %s %s:%s\nVerbindingscontrole: %s" % (self.name,self.host,self.port, str(self.online)))
     
     def checkconnection(self):
         '''Simpele test of dat de verbinding tot stand kan worden gebracht.'''
@@ -32,7 +36,11 @@ class agent():
         '''Functie om gegevens op te vragen aan de server. Er kan worden opgegeven welke waarde er moet worden opgevraagd door dat argument al True mee te geven'''
         try:
             response = self.client.get_value(platform=platform, ip=ip, loggedinusers=loggedinusers, services=services, freespace=freespace, ram=ram, uptime=uptime).resultaat
-            self.online = True            
+            self.online = True
+            self.csvf  = open(self.csvfilename, 'a') 
+            self.csvwriter = csv.writer(self.csvf,lineterminator='\n')
+            self.csvwriter.writerow((datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), self.name, 'Requested zooi', repr(response)))
+            self.csvf.close()
             return response
         except:
             self.online = False
