@@ -14,7 +14,8 @@ def echo(request):
 # functie met daarin een lijstje van alle dingen die we op kunnen vragen
 def get_value(platform=False, ip=False, loggedinusers=False, services=False, freespace=False, ram=False, uptime=False):
     ''' Geeft waarden terug van de opgevraagde gegevens in een directory '''    
-    response ={}    
+    #response ={}
+    response = {'platform':'','services':'','ram':'','ip':'','freespace':'','uptime':'','loggedinusers':''}
     print "WAARDES OPGEVRAAGD platform", platform,"ip", ip,"loggedin users", loggedinusers,"services", services,"freespace", freespace,"ram", ram,"uptime", uptime
 
     # Opvragen platform type terug
@@ -76,7 +77,6 @@ def get_value(platform=False, ip=False, loggedinusers=False, services=False, fre
         output = p.stdout.read()
         response['loggedinusers'] = output
     # Last value
-    print type(response)
     return response
 
 # ---------------------------------------------------------
@@ -91,7 +91,8 @@ dispatcher = SoapDispatcher(
 
 # do not change anything unless you know what you're doing.
 dispatcher.register_function('get_value', get_value,
-    returns={'resultaat': [{str: str}] } ,   # return data type
+    #returns={'resultaat': [{str: str}] } ,   # return data type
+    returns={'resultaat': [{'platform':str, 'ip':str, 'loggedinusers':str, 'services':str, 'freespace':str, 'ram':str, 'uptime':str}] } ,   # return data type   
     args={'platform':bool, 'ip':bool, 'loggedinusers':bool, 'services':bool, 'freespace':bool,
           'ram':bool, 'uptime':bool}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.
     )

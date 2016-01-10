@@ -4,6 +4,7 @@ Beschrijving van bestand
 
 """
 from pysimplesoap.client import SoapClient
+from lxml import etree
 import datetime
 import csv
 
@@ -48,4 +49,4 @@ class agent():
 
 #test = agent('Jasper-PC1', 'localhost', 8008)
 #reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
-#print "Platform:",reactie.platform,"\nUptime:",reactie.uptime,"\nIP:",reactie.ip
+#reactie = test.retrievedata(platform=True)
