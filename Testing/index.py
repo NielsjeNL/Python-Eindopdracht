@@ -9,26 +9,25 @@ import agentconnector
 import cgi, cgitb
 import logging
 cgitb.enable()
-
-#-----------------------
-#configuratie inladen
-configtree = etree.parse('mgmtconfig.xml')
-
-# Loop door alle servers...
-print str(configtree.xpath('/config/logging/loglevel/text()')[0])
-systems = configtree.xpath('/config/server')
-serveragent={}
-for i in systems:
-    print ('banaan')
-    name = i.get('name')
-    host = i.xpath('./host')[0].text
-    port = i.xpath('./port')[0].text
-    serveragent[i.get('name')] = agentconnector.agent(name, host, port)
-
 # HTML-metadata
 #print 'Status: 200 OK\n'
 print "Content-Type: text/html"     # HTML is following
 print                               # blank line, end of headers
+#-----------------------
+#configuratie inladen
+configtree = etree.parse('mgmtconfig.xml')
+print configtree
+
+# Loop door alle servers...
+#print str(configtree.xpath('/config/logging/loglevel/text()')[0])
+systems = configtree.xpath('/config/server')
+print systems
+serveragent={}
+for i in systems:
+    name = i.get('name')
+    host = i.xpath('./host')[0].text
+    port = i.xpath('./port')[0].text
+    serveragent[i.get('name')] = agentconnector.agent(name, host, port)
 
 test = agentconnector.agent('Jasper-PC', 'localhost', 8008)
 print test.name
@@ -45,7 +44,7 @@ print '''<!DOCTYPE html>
   <link href="style.css" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
-  <script language="javascript" type="text/javascri pt">
+  <script language="javascript" type="text/javascript">
   function resizeIframe(obj) {
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
   }
