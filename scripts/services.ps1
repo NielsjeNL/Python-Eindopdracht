@@ -4,6 +4,6 @@ $stopped = (Get-Service | Where-Object { $_.Status -eq "Stopped" }).length
 $running = (Get-Service | Where-Object { $_.Status -eq "Running" }).length
 
 $Display = "" + $running + " running services en " + $stopped + " gestopte"
-write-host $Display
+write-host -NoNewline $Display
 }
 Get-Services

@@ -13,4 +13,4 @@ $vrij = $vrij -replace ('\.', '')
 $vrij = $vrij -replace (',', '')
 $vrij = $vrij -replace (' MB', '')
 
-write-host "$totaal $vrij"
+write-host -NoNewline "$totaal $vrij"

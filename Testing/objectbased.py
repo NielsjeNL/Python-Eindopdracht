@@ -29,14 +29,8 @@ class agent():
             
     def retrievedata(self, platform=False, ip=False, loggedinusers=False, services=False, freespace=False,systeminfo=False, ram=False, uptime=False):
         response = self.client.get_value(platform=platform, ip=ip, loggedinusers=loggedinusers, services=services, freespace=freespace,systeminfo=systeminfo, ram=ram, uptime=uptime).resultaat
-        reactie = response
         return response
 
-test = agent('Jasper-PC', 'localhost', 8008)
-test1 = agent('Jasper-PC1', 'localhost', 8009)
-
-#data = test.retrievedata(platform=True,freespace=True)
-#print data
-
-reactie = test.client.get_value(platform=True)
-reactie1  = test1.client.get_value(platform=True)
+test = agent('Jasper-PC1', 'localhost', 8009)
+reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True,systeminfo=True, ram=True, uptime=True)
+print "Platform:",reactie.platform,"\nUptime:",reactie.uptime,"\nIP:",reactie.ip
