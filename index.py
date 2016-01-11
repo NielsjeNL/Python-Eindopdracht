@@ -2,7 +2,7 @@
 """
 Created on Sun Jan 10 02:08:36 2016
 
-@author: jaspe
+@author: jasper & niels
 """
 from lxml import etree
 import agentconnector
@@ -62,16 +62,8 @@ req_freespace  = bool(cgidata.getvalue('req_freespace'))
 req_uptime  = bool(cgidata.getvalue('req_uptime'))
 req_loggedinusers  = bool(cgidata.getvalue('req_loggedinusers'))
 
-
-
 if page == None:
     page = 'Home'
-
-## Debugging data
-#page = 'Server1'
-#results = '1'
-#req_all = True
-#print vars()
 
 #-------------------------------
 # Opvragen opgegeven waardes bij agent
@@ -83,10 +75,6 @@ if results == '1':
     else:
         logger.warning('Gegevens van '+page+': platform '+ str(req_platform) +"ip"+ str(req_ip) +"loggedin users"+ str(req_loggedinusers) +"services"+ str(req_services) +"freespace"+ str(req_freespace)+"ram"+ str(req_ram) +"uptime"+ str(req_uptime))
         reactie = serveragent[page].retrievedata(platform=req_platform, ip=req_ip, loggedinusers=req_loggedinusers, services=req_services, freespace=req_freespace, ram=req_ram, uptime=req_uptime)
-#loop door waardes heen
-#for i in cgidata.keys():
-#    print i, '-', cgidata[i].value,"<br/>"
-
 
 # Opbouwen HTML pagina
 print '''<!DOCTYPE html>
@@ -119,11 +107,11 @@ for name in serveragent:
         print "<li class=\"header-nav-item\"><a class=\"header-nav-link\" href=\"index.py?page=%s\">%s</a></li>" % (name,name)
 
 print '''</ul>
+<!--
 <ul class="header-nav right">
-<!--- if page is agent dan onderlinen ofzo-->
-<!-- endif -->
+
 <li class="header-nav-item"><a href="#" class="header-nav-link" alt="Button autorefresh"><img class="header-icon" src="./images/refresh-icon.png"/></a></li>
-</ul>
+</ul> -->
 </div>
 </div>
 <div class="main-content">'''
@@ -143,14 +131,12 @@ if page != 'Home':
     </p><br />
     <form id="form-agents" action="?page=%s&results=1" method="post">
         <table>
-            <tr><td style="border-bottom: solid; border-bottom-width: 2px;">Alles ophalen:</td>
-                <td style="border-bottom: solid; border-bottom-width: 2px;"><input type="checkbox" name="req_all" value="True"/>Yes</td></tr>
-            <tr><td>Platform-type:</td><td><input type="checkbox" name="req_platform" value="True"/>Yes</td></tr>
-            <tr><td>Running en totaal # services:</td><td><input type="checkbox" name="req_services" value="True"/>Yes</td></tr>
-            <tr><td>Totaal RAM en beschikbaar RAM:</td><td><input type="checkbox" name="req_ram" value="True"/>Yes</td></tr>
-            <tr><td>Eerst beschikbaar IP:</td><td><input type="checkbox" name="req_ip" value="True"/>Yes</td></tr>
-            <tr><td>Vrij geheugen op C:</td><td><input type="checkbox" name="req_freespace" value="True"/>Yes</td></tr>
-            <tr><td>Systeem uptime:</td><td><input type="checkbox" name="req_uptime" value="True"/>Yes</td></tr>
+            <tr><td style="border-bottom: solid; border-bottom-width: 2px;">Alles ophalen:</td><td style="border-bottom: solid; border-bottom-width: 2px;"/><td style="border-bottom: solid; border-bottom-width: 2px;"/>
+            <td style="border-bottom: solid; border-bottom-width: 2px;"><input type="checkbox" name="req_all" value="True"/>Yes</td></tr>
+			
+            <tr><td>Platform-type:</td><td><input type="checkbox" name="req_platform" value="True"/>Yes</td><td>Running en totaal # services:</td><td><input type="checkbox" name="req_services" value="True"/>Yes</td></tr>
+            <tr><td>Totaal RAM en beschikbaar RAM:</td><td><input type="checkbox" name="req_ram" value="True"/>Yes</td><td>Eerst beschikbaar IP:</td><td><input type="checkbox" name="req_ip" value="True"/>Yes</td></tr>
+            <tr><td>Vrij geheugen op C:</td><td><input type="checkbox" name="req_freespace" value="True"/>Yes</td><td>Systeem uptime:</td><td><input type="checkbox" name="req_uptime" value="True"/>Yes</td></tr>
             <tr><td>Aantal ingelogde users:</td><td><input type="checkbox" name="req_loggedinusers" value="True"/>Yes</td></tr>
         </table>
         <input type="submit" name="submitform" value="Vraag op"/> 
@@ -178,8 +164,26 @@ if page != 'Home':
                     </div>
                     ''' % (int(resultaten[i][0]),int(resultaten[i][1]),grafiek)
                     tablerows = tablerows + ("<tr><td>Running services</td><td>%s</td></tr>" % (resultaten[i][0]))
+                elif i == 'freespace':
+                    percentage = int(100-float(resultaten[i][1])/float(resultaten[i][0])*100)
+                    grafieken = grafieken + ''' 
+                    <script>
+                          $(function() {
+                            $( "#progressbar1" ).progressbar({
+                              value: %i
+                            });
+                          });
+                          </script>                    
+                    <div class="item-wd-2-4">
+                    	<div class="item-content">
+                    		<h1>Hard disk</h1>
+                    		<p>Info over C:\ schijf: <br/> Omvang: %s GB<br/>Beschikbaar: %s GB</p>
+                    		<div id="progressbar1"><div class="progress-label">%i %%</div></div>
+                    	</div>
+                    </div>
+                    ''' % (percentage, str(resultaten[i][0]),str(resultaten[i][1]),percentage)
+                    tablerows = tablerows + ("<tr><td>Vrije schijf ruimte</td><td>%s GB</td></tr>" % (resultaten[i][1]))
                 elif i=='ram':
-                    #grafiek = graphs.used_bar(int(resultaten[i][1]),int(resultaten[i][0]))
                     percentage = int(100-(float(resultaten[i][1])/float(resultaten[i][0])*100))
                     grafieken = grafieken + '''
                     <script>

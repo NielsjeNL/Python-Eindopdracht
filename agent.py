@@ -2,6 +2,7 @@ from pysimplesoap.server import SoapDispatcher, SOAPHandler
 from BaseHTTPServer import HTTPServer
 from lxml import etree
 import sys,subprocess
+import warnings
 # ---------------------------------------------------------
 # Config inlezen
 configtree = etree.parse('agentconfig.xml')
@@ -43,21 +44,21 @@ def get_value(platform=False, ip=False, loggedinusers=False, services=False, fre
     # Powershell: Eerst beschikbare IP adres
     if ip == True:
         p=subprocess.Popen(['powershell',
+                            '-ExecutionPolicy', 'Unrestricted',
                             '.\\scripts\\get-firstIP.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         output = output.rstrip()
         response['ip'] = output
-        
-    # Powershell: Beschikbaar geheugen op C:
+
+    # Powershell: Schijfruimte 
     if freespace == True:
-        p=subprocess.Popen(['powershell',
-                            """Get-WmiObject Win32_logicaldisk ` | Select -first 1 FreeSpace | 
-                               ForEach-Object {$_.freespace / 1GB}"""],
-                            stdout = subprocess.PIPE)
-        output = float(p.stdout.read())
-        output = str("%.2f" % output)+" GB"
-        response['freespace'] =  output
+        p=subprocess.Popen(['powershell.exe',
+            '-ExecutionPolicy', 'Unrestricted',
+            '.\\scripts\diskspace.ps1'],
+        stdout=subprocess.PIPE)
+        output = p.stdout.read()
+        response['freespace'] = output
         
     # Powershell: System uptime
     if uptime == True:
@@ -90,8 +91,8 @@ dispatcher = SoapDispatcher(
     ns = True)
 
 # do not change anything unless you know what you're doing.
+warnings.filterwarnings("ignore")
 dispatcher.register_function('get_value', get_value,
-    #returns={'resultaat': [{str: str}] } ,   # return data type
     returns={'resultaat': [{'platform':str, 'ip':str, 'loggedinusers':str, 'services':str, 'freespace':str, 'ram':str, 'uptime':str}] } ,   # return data type   
     args={'platform':bool, 'ip':bool, 'loggedinusers':bool, 'services':bool, 'freespace':bool,
           'ram':bool, 'uptime':bool}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.

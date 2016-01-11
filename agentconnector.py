@@ -4,7 +4,6 @@ Beschrijving van bestand
 
 """
 from pysimplesoap.client import SoapClient
-#from pysimplesoap.simplexml import SimpleXMLElement
 import datetime
 import csv
 
@@ -24,6 +23,7 @@ class agent():
         
         
     def __str__(self):
+        '''functie die name, host, poort en laatst bekende verbindingsstatus teruggeeft.'''
         return ("Agent aangemaakt: %s %s:%s Verbindingscontrole: %s" % (self.name,self.host,self.port, str(self.online)))
     
     def checkconnection(self):
@@ -45,7 +45,7 @@ class agent():
                 self.csvwriter.writerow((datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), self.name, 'Requested zooi', repr(response)))
                 self.csvf.close()
             except:
-                print "Kan CSV bestand niet bijwerken" #hier beter een logging van maken?
+                print "Kan CSV bestand niet bijwerken"
             
             return response
         except:
@@ -60,7 +60,7 @@ def process_response(response):
     output['ip'] = str(response.ip)
     output['loggedinusers'] = str(response.loggedinusers)
     output['services'] = str(response.services).split()
-    output['freespace'] = str(response.freespace)
+    output['freespace'] = str(response.freespace).split()
     output['ram'] = str(response.ram).split()
     output['uptime'] = str(response.uptime)
     for i in output:
@@ -71,15 +71,3 @@ def process_response(response):
     for i in todelete:
         del output[i]
     return output
-    
-#test = agent('Jasper-PC1', 'localhost', 8008)
-#reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
-#reactie = test.retrievedata(services=True,platform=True)
-
-#reactie.platform
-#reactie.ip
-#reactie.loggedinusers
-#reactie.services
-#reactie.freespace
-#reactie.ram
-#reactie.uptime

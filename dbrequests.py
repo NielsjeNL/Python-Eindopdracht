@@ -4,7 +4,6 @@ from lxml import etree
 import agentconnector
 import sqlite3
 import sys
-import re
 import datetime as datetime
 import time
 
