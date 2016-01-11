@@ -1,6 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <config>
-	<hostname>127.0.0.1</hostname>
-	<port>8008</port>
-      <logfile>management.log</logfile>
-      <loglevel>WARNING</loglevel>
+	<server name="Jasper-PC"> <!-- name is weergave naam -->
+		<host>localhost</host><!-- Mag IP of hostname zijn-->
+		<port>8008</port> <!-- Port waarop de server draait -->
+	</server>
+	<server name="Jasper-VM"> <!-- name is weergave naam -->
+		<host>192.168.10.10</host><!-- Mag IP of hostname zijn-->
+		<port>8008</port> <!-- Port waarop de server draait -->
+	</server>
+	<logging>
+		<logfile>management.log</logfile>
+		<loglevel>WARNING</loglevel>
+	</logging>
 </config>

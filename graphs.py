@@ -88,6 +88,7 @@ def services_bar(hostname):
     autolabel(rects1)
     autolabel(rects2)
     autolabel(rects3)
+<<<<<<< HEAD
     #plt.show()
     format = "png"
     sio = cStringIO.StringIO()
@@ -150,6 +151,8 @@ def services_bar(hostname):
     autolabel(rects1)
     autolabel(rects2)
     autolabel(rects3)
+=======
+>>>>>>> refs/remotes/origin/testing
     #plt.show()
     format = "png"
     sio = cStringIO.StringIO()
