@@ -3,88 +3,81 @@ from BaseHTTPServer import HTTPServer
 from lxml import etree
 import sys,subprocess
 # ---------------------------------------------------------
-# Variabelen aanmaken
-configtree = etree.parse('agentconfig.xml')
-
-# ---------------------------------------------------------
 # Config inlezen
+configtree = etree.parse('agentconfig.xml')
 port = str(configtree.xpath('/config/port/text()')[0])
 
+def echo(request):
+    "Copy request->response (generic, any type)"
+    return request.value
+    
 # functie met daarin een lijstje van alle dingen die we op kunnen vragen
-def get_value(number):
-    # return the result of one of the pre-define numbers
-    print "WAARDE OPGEVRAAGD MET NUMMER ",number
+def get_value(platform=False, ip=False, loggedinusers=False, services=False, freespace=False, ram=False, uptime=False):
+    ''' Geeft waarden terug van de opgevraagde gegevens in een directory '''    
+    #response ={}
+    response = {'platform':'','services':'','ram':'','ip':'','freespace':'','uptime':'','loggedinusers':''}
+    print "WAARDES OPGEVRAAGD platform", platform,"ip", ip,"loggedin users", loggedinusers,"services", services,"freespace", freespace,"ram", ram,"uptime", uptime
 
-    # An example of a value that is acquired using Python only.
-    # returns a string
-    if number == 1:
-        return sys.platform
+    # Opvragen platform type terug
+    if platform == True:
+        response['platform'] = sys.platform
+        
     # Running en totaal # services
-    if number == 2:
+    if services == True:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\services.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
-        return output
+        response['services'] = output
         
     # Powershell: Totaal RAM in GB
-    if number == 3:
+    if ram == True:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\memory.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
-        return output
-        
-        
-# dit is nu verwerkt in nummer 3
-#    # Powershell: Beschikbaar RAM in MB
-#    if number == 31:
-#        p=subprocess.Popen(['powershell',
-#                            '(Get-Counter -Counter "\Memory\Available MBytes").CounterSamples[0].CookedValue'],
-#        stdout=subprocess.PIPE)
-#        output = p.stdout.read()+" MB"
-#        return output
+        response['ram'] = output
    
     # Powershell: Eerst beschikbare IP adres
-    if number == 4:
+    if ip == True:
         p=subprocess.Popen(['powershell',
                             '.\\scripts\\get-firstIP.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
         output = output.rstrip()
-        return output
+        response['ip'] = output
         
     # Powershell: Beschikbaar geheugen op C:
-    if number == 5:
+    if freespace == True:
         p=subprocess.Popen(['powershell',
                             """Get-WmiObject Win32_logicaldisk ` | Select -first 1 FreeSpace | 
                                ForEach-Object {$_.freespace / 1GB}"""],
                             stdout = subprocess.PIPE)
         output = float(p.stdout.read())
         output = str("%.2f" % output)+" GB"
-        return output
+        response['freespace'] =  output
         
     # Powershell: System uptime
-    if number == 6:
+    if uptime == True:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\get-uptime.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
-        return output
+        response['uptime'] = output
         
     # Powershell: Aantal ingelogde gebruikers teruggeven
-    if number == 7:
+    if loggedinusers == True:
         p=subprocess.Popen(['powershell.exe',
             '-ExecutionPolicy', 'Unrestricted',
             '.\\scripts\\get-loggedonusers.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
-        return output
+        response['loggedinusers'] = output
     # Last value
-    return None
+    return response
 
 # ---------------------------------------------------------
 # do not change anything unless you know what you're doing.
@@ -98,9 +91,13 @@ dispatcher = SoapDispatcher(
 
 # do not change anything unless you know what you're doing.
 dispatcher.register_function('get_value', get_value,
-    returns={'resultaat': str},   # return data type
-    args={'number': int}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.
+    #returns={'resultaat': [{str: str}] } ,   # return data type
+    returns={'resultaat': [{'platform':str, 'ip':str, 'loggedinusers':str, 'services':str, 'freespace':str, 'ram':str, 'uptime':str}] } ,   # return data type   
+    args={'platform':bool, 'ip':bool, 'loggedinusers':bool, 'services':bool, 'freespace':bool,
+          'ram':bool, 'uptime':bool}         # it seems that an argument is mandatory, although not needed as input for this function: therefore a dummy argument is supplied but not used.
     )
+
+dispatcher.register_function('Echo', echo)
 
 # Let this agent listen forever, do not change anything unless needed.
 try:

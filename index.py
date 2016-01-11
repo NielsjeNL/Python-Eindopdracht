@@ -8,6 +8,7 @@ from lxml import etree
 import agentconnector
 import cgi, cgitb
 import logging
+import os
 cgitb.enable()
 # HTML-metadata
 #print 'Status: 200 OK\n'
@@ -16,12 +17,9 @@ print                               # blank line, end of headers
 #-----------------------
 #configuratie inladen
 configtree = etree.parse('mgmtconfig.xml')
-print configtree
-
 # Loop door alle servers...
-#print str(configtree.xpath('/config/logging/loglevel/text()')[0])
+#print etree.tostring(configtree, pretty_print=True).decode('UTF-8')
 systems = configtree.xpath('/config/server')
-print systems
 serveragent={}
 for i in systems:
     name = i.get('name')
@@ -29,8 +27,7 @@ for i in systems:
     port = i.xpath('./port')[0].text
     serveragent[i.get('name')] = agentconnector.agent(name, host, port)
 
-test = agentconnector.agent('Jasper-PC', 'localhost', 8008)
-print test.name
+print serveragent
 # Tijdelijke test data
 activeagent = 'Server1'
 
@@ -58,7 +55,6 @@ print '''<!DOCTYPE html>
 <li class="header-nav-item"><a class="header-nav-link" href="index.py">Homepagina</a></li>'''
 
 for name in serveragent:
-    print '''banaan'''
     if activeagent == name:
         print "<li class=\"header-nav-item\"><a class=\"header-nav-linkc\" href=\"index.py?page=%s\">%s</a></li>" % (name,name)
     else:
