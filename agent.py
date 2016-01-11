@@ -76,16 +76,7 @@ def get_value(platform=False, ip=False, loggedinusers=False, services=False, fre
             '.\\scripts\\get-loggedonusers.ps1'],
         stdout=subprocess.PIPE)
         output = p.stdout.read()
-<<<<<<< HEAD
-        return output
-        
-    if number == 999:
-        output = 'Verbinding OK'
-        return output
-
-=======
         response['loggedinusers'] = output
->>>>>>> refs/remotes/origin/testing
     # Last value
     return response
 
