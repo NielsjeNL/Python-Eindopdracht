@@ -4,7 +4,6 @@ Beschrijving van bestand
 
 """
 from pysimplesoap.client import SoapClient
-from lxml import etree
 import datetime
 import csv
 

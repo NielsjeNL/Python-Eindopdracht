@@ -31,11 +31,36 @@ for i in systems:
 cgidata = cgi.FieldStorage()
 page = cgidata.getvalue('page')
 results = cgidata.getvalue('results')
+req_all  = bool(cgidata.getvalue('req_all'))
+req_platform  = bool(cgidata.getvalue('req_platform'))
+req_services  = bool(cgidata.getvalue('req_services'))
+req_ram  = bool(cgidata.getvalue('req_ram'))
+req_ip  = bool(cgidata.getvalue('req_ip'))
+req_freespace  = bool(cgidata.getvalue('req_freespace'))
+req_uptime  = bool(cgidata.getvalue('req_uptime'))
+req_loggedinusers  = bool(cgidata.getvalue('req_loggedinusers'))
+
 if page == None:
     page = 'Home'
+
+## Debugging data
+#page = 'Server1'
+#results = '1'
+#req_all = True
+#print vars()
+
+#-------------------------------
+# Opvragen opgegeven waardes bij agent
+
+if results == '1':
+    if req_all == True:
+        reactie = serveragent[page].retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
+    else:
+        reactie = serveragent[page].retrievedata(platform=req_platform, ip=req_ip, loggedinusers=req_loggedinusers, services=req_services, freespace=req_freespace, ram=req_ram, uptime=req_uptime)
+
 #loop door waardes heen
 #for i in cgidata.keys():
-# print cgidata[i].value
+#    print i, '-', cgidata[i].value,"<br/>"
 
 
 # Opbouwen HTML pagina
@@ -91,23 +116,23 @@ if page != 'Home':
     <p>
       Selecteer de counters die opgehaald moeten worden.
     </p><br />
-    <form id="form-agents" action="?page=%s&results" method="post">
+    <form id="form-agents" action="?page=%s&results=1" method="post">
         <table>
             <tr><td style="border-bottom: solid; border-bottom-width: 2px;">Alles ophalen:</td>
                 <td style="border-bottom: solid; border-bottom-width: 2px;"><input type="checkbox" name="req_all" value="True"/>Yes</td></tr>
-            <tr><td>Platform-type:          </td><td><input type="checkbox" name="req_platform" value="True"/>Yes</td></tr>
+            <tr><td>Platform-type:</td><td><input type="checkbox" name="req_platform" value="True"/>Yes</td></tr>
             <tr><td>Running en totaal # services:</td><td><input type="checkbox" name="req_services" value="True"/>Yes</td></tr>
-            <tr><td>Totaal RAM en beschikbaar RAM:             </td><td><input type="checkbox" name="req_ram" value="True"/>Yes</td></tr>
-            <tr><td>Eerst beschikbaar IP:   </td><td><input type="checkbox" name="req_ip" value="True"/>Yes</td></tr>
-            <tr><td>Vrij geheugen op C: :   </td><td><input type="checkbox" name="req_freespace" value="True"/>Yes</td></tr>
-            <tr><td>Systeem uptime:         </td><td><input type="checkbox" name="req_uptime" value="True"/>Yes</td></tr>
-            <tr><td>Aantal ingelogde users: </td><td><input type="checkbox" name="req_loggedinusers" value="True"/>Yes</td></tr>
+            <tr><td>Totaal RAM en beschikbaar RAM:</td><td><input type="checkbox" name="req_ram" value="True"/>Yes</td></tr>
+            <tr><td>Eerst beschikbaar IP:</td><td><input type="checkbox" name="req_ip" value="True"/>Yes</td></tr>
+            <tr><td>Vrij geheugen op C:</td><td><input type="checkbox" name="req_freespace" value="True"/>Yes</td></tr>
+            <tr><td>Systeem uptime:</td><td><input type="checkbox" name="req_uptime" value="True"/>Yes</td></tr>
+            <tr><td>Aantal ingelogde users:</td><td><input type="checkbox" name="req_loggedinusers" value="True"/>Yes</td></tr>
         </table>
         <input type="submit" name="submitform" value="Vraag op"/> 
     </form>
     ''' % (page,page)
     if results == '1':
-        print 'results is 1'
+        print repr(reactie)
 
 print '''</div>
 <div class="container footer">
