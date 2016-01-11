@@ -6,6 +6,7 @@ import numpy as np
     
 def gen_pie_xofx(value1,value2,label1,label2):
     '''Functie maakt een piechart van twee gegeven waarden, labels moeten ook worden opgegeven'''
+    plt.close('all') #alle oude Plots weggooien
     # Data to plot
     labels = label1, label2
     sizes = [value1, value2]
@@ -23,25 +24,35 @@ def gen_pie_xofx(value1,value2,label1,label2):
     
 def services_bar(hostname):    
     '''Maakt een horizontale balk van alle services. Data haalt hij uit de SQL database. '''
+    plt.close('all') #alle oude Plots weggooien
     listSQL = []
     
     # SQLite DB openen
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
-    c.execute("""SELECT datetime, hostname, servicesRunning, servicesStopped FROM management 
-                WHERE hostname=\'"""+hostname+"""\' ORDER BY datetime DESC""")
-    for i in range(5):
-        a = c.fetchone()
-        listSQL.append(a)
-    # DB weer sluiten, anders wordt deze permanent gelocked totdat script stopt
-    conn.close()    
+    try:
+        c.execute("""SELECT datetime, hostname, servicesRunning, servicesStopped FROM management 
+                     WHERE hostname=\'"""+hostname+"""\' ORDER BY datetime DESC""")
+        for i in range(5):
+            a = c.fetchone()
+            listSQL.append(a)
+        # DB weer sluiten, anders wordt deze permanent gelocked totdat script stopt
+        conn.close()
+    except:
+        print 'De database was gelocked of er staan nog niet genoeg gegevens in.'
+        conn.close()
+        return False
     
     # Totalen optellen
-    servT1 = listSQL[0][2] + listSQL [0][3]
-    servT2 = listSQL[1][2] + listSQL [1][3]
-    servT3 = listSQL[2][2] + listSQL [2][3]
-    servT4 = listSQL[3][2] + listSQL [3][3]
-    servT5 = listSQL[4][2] + listSQL [4][3]
+    try:
+        servT1 = listSQL[0][2] + listSQL [0][3]
+        servT2 = listSQL[1][2] + listSQL [1][3]
+        servT3 = listSQL[2][2] + listSQL [2][3]
+        servT4 = listSQL[3][2] + listSQL [3][3]
+        servT5 = listSQL[4][2] + listSQL [4][3]
+    except:
+        print 'Er zijn niet genoeg gegevens om totalen te maken.'
+        return False
     # Grafiek maken van de services
     N = 5
     servRunning = (listSQL[0][2], listSQL[1][2], listSQL[2][2], listSQL[3][2], listSQL[4][2]) # Running services

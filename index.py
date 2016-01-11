@@ -125,12 +125,12 @@ if page == 'Home':
     <p>Welkom op de beheerspagina van het management systeem van Jasper en Niels. Dit systeem kan van agents systeem informatie opvragen, welke informatie precies kan worden aangegeven in het selectie veld op de desbetreffende agent pagina.</p>
     <p>Voordat het systeem werkt moet eerst het configuratiebestand worden aangepast, hoe dat dit precies moet staat beschreven in het INSTALL.txt bestand.</p>    
     '''
-if page == 'history'	
+elif page == 'history':
 	print '''<h1>Historische data</h1>
 	<p>Op deze pagina worden oude gegevens uit de database weergegeven van de agents die in het XML bestand zijn aangemaakt. Dit kan handig zijn om patronen te herkennen.</p> <p>Op dit moment wordt er elke 5 minuten data opgehaald en worden alleen de laatste 5 resultaten weergegeven, als er nog geen 5 resultaten zijn wordt er niets weergegeven.</p>
 	'''
 	for name in serveragent:
-		grafiek = graph.services_bar(name)
+		grafiek = graphs.services_bar(name)
 		if grafiek != False:
 			print ''' <div class="item-wd-2-4">
                     	<div class="item-content">
@@ -141,7 +141,7 @@ if page == 'history'
                     </div>
                     ''' % (name,name,grafiek)
 	
-if page != 'Home':
+elif page != 'Home':
     logger.warning(page +' pagina wordt weergegeven')
     print '''
     <h1>%s</h1>
