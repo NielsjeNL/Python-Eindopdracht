@@ -52,7 +52,7 @@ def services_bar(hostname):
     servSStd = (4, 4, 4, 4, 4)
     servTStd = (6, 6, 6, 6, 6)
     
-    ind = np.arange(N)  # the x locations for the groups
+    ind = np.arange(0, N*1.2, 1.2)  # the x locations for the groups
     width  = 0.35       # the width of the bars
     width2 = 0.7       # for the blue bar
     fig, ax = plt.subplots()
@@ -63,7 +63,7 @@ def services_bar(hostname):
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Aantal services') # Verticale label
     ax.set_title('Running en gestopte services') # Label aan de top
-    ax.set_xticks(ind + 0.55) # Posities van de textlabels zetten, hier moet iets gebeuren denk ik
+    ax.set_xticks(ind + 0.55) # Posities van de textlabels
     ax.set_xticklabels(('M1', 'M2', 'M3', 'M4', 'M5')) # Labels aan de onderkant
     
     ax.legend((rects1[0], rects2[0], rects3[0]), ('Running', 'Gestopt', 'Totaal'), loc=4)
