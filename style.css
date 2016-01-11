@@ -74,8 +74,9 @@ ul, ol {
 .main-content {
 	display:block;
 	width: 980px;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 5px auto;
+	/*margin-left: auto;
+	margin-right: auto;*/
 }
 
 #form-agents {
@@ -163,7 +164,7 @@ ul, ol {
 	width: 651px;
 	padding: 5px;
 	height: auto;
-	float: left;
+	float: right;
 	background:white;
 	border: 1px solid #9C9C9C;
     border-radius: 3px; 
@@ -171,4 +172,8 @@ ul, ol {
 .item-content img {
 	max-width:100%;
 	max-height:100%;
+}
+.item-content p, .item-content h1 {
+	padding:0;
+	margin:0;
 }

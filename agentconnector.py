@@ -53,6 +53,7 @@ class agent():
             return False
 
 def process_response(response):
+    '''input is pysoap simpleXML reactie verkregen van de agent, geeft dictionary terug met opgevraagde waarden'''
     output = {}
     todelete =[]
     output['platform'] = str(response.platform)
@@ -62,18 +63,12 @@ def process_response(response):
     output['freespace'] = str(response.freespace)
     output['ram'] = str(response.ram).split()
     output['uptime'] = str(response.uptime)
-    print output
-    print ''
     for i in output:
-        print i, '-', output[i]
         if output[i] == '':
-            print output[i], "is leeg dus verwijdert"
             todelete.append(i)
         if output[i] == []:
-            print output[i], "is leeg dus verwijdert"
             todelete.append(i)
     for i in todelete:
-        print output[i], "is leeg dus verwijdert"
         del output[i]
     return output
     

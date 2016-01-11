@@ -58,7 +58,6 @@ if results == '1':
         reactie = serveragent[page].retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
     else:
         reactie = serveragent[page].retrievedata(platform=req_platform, ip=req_ip, loggedinusers=req_loggedinusers, services=req_services, freespace=req_freespace, ram=req_ram, uptime=req_uptime)
-
 #loop door waardes heen
 #for i in cgidata.keys():
 #    print i, '-', cgidata[i].value,"<br/>"
@@ -133,13 +132,26 @@ if page != 'Home':
     </form>
     ''' % (page,page)
     if results == '1':
-        print reactie.platform,'<br/>'
-        print reactie.ip,'<br/>'
-        print reactie.loggedinusers,'<br/>'
-        print reactie.services,'<br/>'
-        print reactie.freespace,'<br/>'
-        print reactie.ram,'<br/>'
-        print reactie.uptime,'<br/>'
+        if reactie == False:
+            print '''<p>De agent is niet te bereiken! Controleer de instellingen / netwerk verbinding en probeer het opnieuw.</p>'''
+        else:
+            resultaten = agentconnector.process_response(reactie)
+            tablerows = ''
+            for i in resultaten:
+                if i == 'services':
+                    tablerows = tablerows + ("<tr><td>Running services</td><td>%s</td></tr>" % (resultaten[i][0]))
+                else:
+                    tablerows = tablerows + ("<tr><td>%s</td><td>%s</td></tr>" % (i,resultaten[i]))
+            
+            print '''
+            <div class="item-wd-1-3">
+                <div class="item-content">
+                    <h1>Systeem informatie</h1>
+                        <table> '''
+            print tablerows
+            print '''</table>
+            	</div>
+            </div> '''
 
 print '''</div>
 <div class="container footer">
