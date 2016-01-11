@@ -38,10 +38,14 @@ class agent():
         try:
             response = self.client.get_value(platform=platform, ip=ip, loggedinusers=loggedinusers, services=services, freespace=freespace, ram=ram, uptime=uptime).resultaat
             self.online = True
-            self.csvf  = open(self.csvfilename, 'a') 
-            self.csvwriter = csv.writer(self.csvf,lineterminator='\n')
-            self.csvwriter.writerow((datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), self.name, 'Requested zooi', repr(response)))
-            self.csvf.close()
+            try:
+                self.csvf  = open(self.csvfilename, 'a') 
+                self.csvwriter = csv.writer(self.csvf,lineterminator='\n')
+                self.csvwriter.writerow((datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), self.name, 'Requested zooi', repr(response)))
+                self.csvf.close()
+            except:
+                print "Kan CSV bestand niet bijwerken" #hier beter een logging van maken?
+            
             return response
         except:
             self.online = False
