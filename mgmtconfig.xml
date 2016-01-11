@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <config>
-	<server name="Jasper-PC"> <!-- name is weergave naam -->
+	<server name="Server 1"> <!-- name is weergave naam -->
 		<host>localhost</host><!-- Mag IP of hostname zijn-->
 		<port>8008</port> <!-- Port waarop de server draait -->
 	</server>
-	<server name="Jasper-VM"> <!-- name is weergave naam -->
-		<host>192.168.10.10</host><!-- Mag IP of hostname zijn-->
+	<server name="Server 2"> <!-- name is weergave naam -->
+		<host>localhost</host><!-- Mag IP of hostname zijn-->
 		<port>8008</port> <!-- Port waarop de server draait -->
 	</server>
 	<logging>

@@ -1,5 +1,5 @@
 <config>
-	<hostname>PAS1</hostname>
-	<hostname>PAS2</hostname>
+	<hostname>localhost</hostname>
+	<hostname>localhost</hostname>
 	<port>8008</port>
 </config>
