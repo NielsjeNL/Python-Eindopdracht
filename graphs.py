@@ -22,10 +22,10 @@ def memory_used_bar(gebruikt, totaal):
     plt.savefig(sio, format=format)
     return sio.getvalue().encode("base64").strip()
     
-def services_bar(hostname):    
+def services_bars():    
     '''Maakt een horizontale balk van alle services. Data haalt hij uit de SQL database. '''
+    hostname = 'PAS1'
     listSQL = []
-    
     # SQLite DB openen
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
@@ -33,7 +33,10 @@ def services_bar(hostname):
                 WHERE hostname=\'"""+hostname+"""\' ORDER BY datetime DESC""")
     for i in range(5):
         a = c.fetchone()
+        print a
         listSQL.append(a)
+    print "\n"
+    print listSQL[4][2]
     # DB weer sluiten, anders wordt deze permanent gelocked totdat script stopt
     conn.close()    
     
@@ -48,25 +51,21 @@ def services_bar(hostname):
     servRunning = (listSQL[0][2], listSQL[1][2], listSQL[2][2], listSQL[3][2], listSQL[4][2]) # Running services
     servStopped = (listSQL[0][3], listSQL[1][3], listSQL[2][3], listSQL[3][3], listSQL[4][3]) # Gestopte serivces
     servTotal = (servT1, servT2, servT3, servT4, servT5) # Totale services
-    servRStd = (3, 3, 3, 3, 3) # Voor de lijntjes die de getallen met de balk verbinden
-    servSStd = (4, 4, 4, 4, 4)
-    servTStd = (6, 6, 6, 6, 6)
-    
-    ind = np.arange(N)  # the x locations for the groups
+
+    ind = np.arange(0, N*1.2, 1.2)  # (start, stop, step) the x locations for the groups
     width  = 0.35       # the width of the bars
-    width2 = 0.7       # for the blue bar
     fig, ax = plt.subplots()
-    rects1 = ax.bar(ind, servRunning, width, color='r', yerr=servRStd) # Rektangle van de running services
-    rects2 = ax.bar(ind + width, servStopped, width, color='y', yerr=servSStd) # En van de gestopte
-    rects3 = ax.bar(ind + width2, servTotal, width, color='b', yerr=servTStd) # En van de totalen
+    rects1 = ax.bar(ind, servRunning, width, color='r') # Rektangle van de running services
+    rects2 = ax.bar(ind + width, servStopped, width, color='y') # En van de gestopte
+    rects3 = ax.bar(ind + width+ width, servTotal, width, color='b',) # En van de gestopte
     
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Aantal services') # Verticale label
     ax.set_title('Running en gestopte services') # Label aan de top
-    ax.set_xticks(ind + 0.55) # Posities van de textlabels zetten, hier moet iets gebeuren denk ik
+    ax.set_xticks(ind + 1.05)
     ax.set_xticklabels(('M1', 'M2', 'M3', 'M4', 'M5')) # Labels aan de onderkant
     
-    ax.legend((rects1[0], rects2[0], rects3[0]), ('Running', 'Gestopt', 'Totaal'), loc=4)
+    ax.legend((rects1[0], rects2[0], rects3[0]), ('Running', 'Gestopt', 'Totaal'))
     
     def autolabel(rects): 
         # attach some text labels
@@ -78,8 +77,4 @@ def services_bar(hostname):
     autolabel(rects1)
     autolabel(rects2)
     autolabel(rects3)
-    #plt.show()
-    format = "png"
-    sio = cStringIO.StringIO()
-    plt.savefig(sio, format=format)
-    return sio.getvalue().encode("base64").strip()
+    plt.show()
