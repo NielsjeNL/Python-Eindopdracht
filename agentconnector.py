@@ -4,6 +4,7 @@ Beschrijving van bestand
 
 """
 from pysimplesoap.client import SoapClient
+#from pysimplesoap.simplexml import SimpleXMLElement
 import datetime
 import csv
 
@@ -20,6 +21,7 @@ class agent():
                                  ns = False)
         self.online = self.checkconnection()
         self.csvfilename = 'management-'+self.name+'.csv'
+        
         
     def __str__(self):
         return ("Agent aangemaakt: %s %s:%s\nVerbindingscontrole: %s" % (self.name,self.host,self.port, str(self.online)))
@@ -52,4 +54,12 @@ class agent():
 
 #test = agent('Jasper-PC1', 'localhost', 8008)
 #reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
-#reactie = test.retrievedata(platform=True)
+#reactie = test.retrievedata(services=True)
+#reactie.platform
+#reactie.ip
+#reactie.loggedinusers
+#reactie.services
+#print str(reactie.services).split()[0]
+#reactie.freespace
+#reactie.ram
+#reactie.uptime

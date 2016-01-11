@@ -17,8 +17,9 @@ print                               # blank line, end of headers
 #-----------------------
 #configuratie inladen
 configtree = etree.parse('mgmtconfig.xml')
+#print etree.tostring(configtree, pretty_print=True).decode('UTF-8') # print inhoud van XML pagina
+
 # Loop door alle servers...
-#print etree.tostring(configtree, pretty_print=True).decode('UTF-8')
 systems = configtree.xpath('/config/server')
 serveragent={}
 for i in systems:
@@ -132,7 +133,13 @@ if page != 'Home':
     </form>
     ''' % (page,page)
     if results == '1':
-        print repr(reactie)
+        print reactie.platform,'<br/>'
+        print reactie.ip,'<br/>'
+        print reactie.loggedinusers,'<br/>'
+        print reactie.services,'<br/>'
+        print reactie.freespace,'<br/>'
+        print reactie.ram,'<br/>'
+        print reactie.uptime,'<br/>'
 
 print '''</div>
 <div class="container footer">
