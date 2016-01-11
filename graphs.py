@@ -22,9 +22,9 @@ def memory_used_bar(gebruikt, totaal):
     plt.savefig(sio, format=format)
     return sio.getvalue().encode("base64").strip()
     
-def services_bars():    
+def services_bars(hostname):    
     '''Maakt een horizontale balk van alle services. Data haalt hij uit de SQL database. '''
-    hostname = 'PAS1'
+    #hostname = 'PAS1'
     listSQL = []
     # SQLite DB openen
     conn = sqlite3.connect('data.db')
@@ -62,7 +62,7 @@ def services_bars():
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Aantal services') # Verticale label
     ax.set_title('Running en gestopte services') # Label aan de top
-    ax.set_xticks(ind + 1.05)
+    ax.set_xticks(ind + 0.55) #posities label x-AS
     ax.set_xticklabels(('M1', 'M2', 'M3', 'M4', 'M5')) # Labels aan de onderkant
     
     ax.legend((rects1[0], rects2[0], rects3[0]), ('Running', 'Gestopt', 'Totaal'))
@@ -77,4 +77,8 @@ def services_bars():
     autolabel(rects1)
     autolabel(rects2)
     autolabel(rects3)
-    plt.show()
+    #plt.show()
+    format = "png"
+    sio = cStringIO.StringIO()
+    plt.savefig(sio, format=format)
+    return sio.getvalue().encode("base64").strip()
