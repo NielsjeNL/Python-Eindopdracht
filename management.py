@@ -9,12 +9,13 @@ cgitb.enable()
 
 # Variabelen aanmaken
 form = cgi.FieldStorage()
-hostnameHTTP = form.getvalue('hostname')
+hostnameHTTP = form.getvalue('hostname') # HostnameHTTP is voor wanneer je de iFrame laad via het html bestand'
+hostnameHTTP = 'PAS1'
 fx = form.getvalue('fx') # fx haalt alles op, fnummer alleen zijn eigen functie
-#fx = True
 f1  = form.getvalue('f1')
 f2  = form.getvalue('f2')
 f3  = form.getvalue('f3')
+f3 = True
 f31  = form.getvalue('f31')
 f4  = form.getvalue('f4')
 f5  = form.getvalue('f5')
@@ -24,8 +25,8 @@ f7  = form.getvalue('f7')
 
 # Config inlezen
 configtree = etree.parse('mgmtconfig.xml')
-hostname = str(configtree.xpath('/config/hostname/text()')[0])
-port = str(configtree.xpath('/config/port/text()')[0])
+hostname = str(configtree.xpath('/config/hostname/text()')[0]) # hostname wordt gebruikt om te testen in spyder ofzo
+port = str(configtree.xpath('/config/port/text()')[0])         # vervang hostnameHTTP overal door hostname om in spyder te kunnen testen
 
 # Logging opzetten
 logfile = str(configtree.xpath('/config/logfile/text()')[0])
@@ -45,7 +46,7 @@ logger.warning('--------------BEGIN LOG--------------')
 logger.warning('Script is begonnen')  
 
 # CSV bestand opzetten
-csvfilename = 'management-'+hostname+'.csv'
+csvfilename = 'management-'+hostnameHTTP+'.csv'
 csvf  = open(csvfilename, 'a') 
 csvwriter = csv.writer(csvf,lineterminator='\n')
 #next(csvwriter)
@@ -94,24 +95,20 @@ if f1 or fx:
     print "Platform type:</td><td>", r1,"</td></tr>"
     logger.warning('Functie 1 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Platform', r1.rstrip()))
+                         hostnameHTTP, 'Platform', r1.rstrip()))
 # Running en totaal # services
 if f2 or fx:
-    logger.warning('Functie 2 opgevraagd')    
     r2=str(client.get_value(number=2).resultaat)
     print "<tr><td>"
     print "Running en totaal aantal services:</td><td>", r2.strip(),"</td></tr>"
-    logger.warning('Functie 2 ontvangen')
-    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Running, totaal # services', r2.rstrip()))
 
 # Totaal RAM
 # ik zet deze ff terug om het resultaat ook in de lijst te laten weergeven
 # dan wordt het voor mij wat overzichtelijker xd ~Niels
 if f3 or fx:
-    r3=str(client.get_value(number=3).resultaat)
+    r3=str(client.get_value(number=3).resultaat).split()
     print "<tr><td>"
-    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3,"</td></tr>"
+    print "Totaal werkgeheugen en beschikbaar geheugen:</td><td>", r3[0],'MB totaal,',r3[1],"MB vrij</td></tr>"
     
 # PS: Eerst beschikbaar IP
 if f4 or fx:
@@ -121,7 +118,7 @@ if f4 or fx:
     print "Eerst beschikbare IP-adres:</td><td>", r4.rstrip(),"</td></tr>"
     logger.warning('Functie 4 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Eerste IP', r4.rstrip()))
+                         hostnameHTTP, 'Eerste IP', r4.rstrip()))
 # PS: Beschikbaar geheugen op C:
 if f5 or fx:
     logger.warning('Functie 5 opgevraagd')
@@ -130,7 +127,7 @@ if f5 or fx:
     print "Vrije schijfruimte op C: :</td><td>", r5.rstrip(),"</td></tr>"
     logger.warning('Functie 5 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                        hostname, 'Geheugen op C:', r5.rstrip()))
+                        hostnameHTTP, 'Geheugen op C:', r5.rstrip()))
 # PS: System Uptime
 if f6 or fx:
     logger.warning('Functie 6 opgevraagd')
@@ -139,7 +136,7 @@ if f6 or fx:
     print "Systeem Uptime:</td><td>", r6.rstrip(),"</td></tr>"
     logger.warning('Functie 6 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'System uptime', r6.rstrip()))
+                         hostnameHTTP, 'System uptime', r6.rstrip()))
 # PS: Aantal ingelogde users
 if f7 or fx:
     logger.warning('Functie 7 opgevraagd')
@@ -148,7 +145,7 @@ if f7 or fx:
     print "Aantal ingelogde gebruikers:</td><td>", r7.rstrip(),"</td></tr>"
     logger.warning('Functie 7 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Aantal ingelogde users', r7.rstrip()))
+                         hostnameHTTP, 'Aantal ingelogde users', r7.rstrip()))
 print '</table>'
 
 if f3 or fx:
@@ -163,7 +160,20 @@ if f3 or fx:
             </div>""" % (r3[1],r3[0],graphs.memory_used_bar(int(r3[0])-int(r3[1]),r3[0]))
     logger.warning('Functie 3 ontvangen')
     csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
-                         hostname, 'Totaal en vrij RAM', r3))
+                         hostnameHTTP, 'Totaal en vrij RAM', r3))
+if f2 or fx:
+    logger.warning('Functie 2 opgevraagd')
+    r2=str(client.get_value(number=2).resultaat)
+    print """<div class="item-wd-2-4">
+            	<div class="item-content">
+            		<h1>Services</h1>
+            		<p>Op dit moment zijn er %s</p>
+            		<img src="data:image/png;base64,%s"/>
+            	</div>
+            </div>""" % (r2,graphs.services_bar(hostnameHTTP))
+    logger.warning('Functie 2 ontvangen')
+    csvwriter.writerow((datetime.date.today(), datetime.datetime.now().time().strftime('%H:%M:%S'),
+                         hostnameHTTP, 'Services', r2))
 print '</HTML>'
 
 logger.warning('---------------END LOG---------------')

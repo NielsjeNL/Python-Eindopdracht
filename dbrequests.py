@@ -109,7 +109,7 @@ def requestData():
         print "Datum en tijd:", datadict['datetime']
         print "Platform type:", datadict['r1']
         print "Running en totaal aantal services:", datadict['r2running'],'running,', datadict['r2stopped'],'gestopt'
-        print "Totaal werkgeheugen en beschikbaar geheugen:", datadict['r3total'],'totaal,',datadict['r3free'],'vrij'
+        print "Totaal werkgeheugen en beschikbaar geheugen:", datadict['r3total'],'MB totaal,',datadict['r3free'],'MB vrij'
         print "Eerst beschikbare IP-adres:", datadict['r4']
         print "Vrije schijfruimte op C: :", datadict['r5']
         print "Systeem Uptime:", datadict['r6']
@@ -123,12 +123,10 @@ def requestData():
                          VALUES (:datetime, :hostname, :r1, :r2running,:r2stopped, 
                                  :r3total, :r3free, :r4, :r5, :r6, :r7)''', datadict)
             conn.commit()
+            print 'Alles gecommit!\n'
         except:
             print 'Er is iets fout gegaan, is de database gelocked?\n'
-            print 'Verbeter de fout en start het script opnieuw op.'            
-            time.sleep(10)
-            exit()
-        print 'Alles gecommit!\n'
+            print 'Commit wordt nu overgeslagen...'
     conn.close()
    
 ###############################################################################
