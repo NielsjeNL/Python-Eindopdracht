@@ -63,13 +63,13 @@ def requestData():
         else:
             datadict['hostname'] = hostname.name
             datadict['datetime'] = str(datetime.datetime.now())
-            datadict['r1'] = reactie.platform
-            r2 = reactie.services
-            datadict['r3'] = reactie.ram
-            datadict['r4'] = reactie.ip
-            datadict['r5'] = reactie.freespace
-            datadict['r6'] = reactie.uptime
-            datadict['r7'] = reactie.loggedinusers
+            datadict['r1'] = str(reactie.platform)
+            r2 = str(reactie.services)
+            datadict['r3'] = str(reactie.ram)
+            datadict['r4'] = str(reactie.ip)
+            datadict['r5'] = str(reactie.freespace)
+            datadict['r6'] = str(reactie.uptime)
+            datadict['r7'] = str(reactie.loggedinusers)
             datadict['r2running'] = str(r2).split()[0]
             datadict['r2stopped'] = str(r2).split()[1]
             datadict['r3total'] = str(datadict['r3']).split()[0]

@@ -54,7 +54,7 @@ class agent():
 
 #test = agent('Jasper-PC1', 'localhost', 8008)
 #reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
-#reactie = test.retrievedata(services=True)
+#reactie = test.retrievedata(services=True,platform=True)
 #reactie.platform
 #reactie.ip
 #reactie.loggedinusers
