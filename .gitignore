@@ -3,3 +3,4 @@ html/images/Thumbs.db
 management.log
 management-PAS1.csv
 management-127.0.0.1.csv
+*.csv
