@@ -24,7 +24,7 @@ class agent():
         
         
     def __str__(self):
-        return ("Agent aangemaakt: %s %s:%s\nVerbindingscontrole: %s" % (self.name,self.host,self.port, str(self.online)))
+        return ("Agent aangemaakt: %s %s:%s Verbindingscontrole: %s" % (self.name,self.host,self.port, str(self.online)))
     
     def checkconnection(self):
         '''Simpele test of dat de verbinding tot stand kan worden gebracht.'''

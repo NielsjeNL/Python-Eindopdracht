@@ -4,9 +4,9 @@
 		<host>localhost</host><!-- Mag IP of hostname zijn-->
 		<port>8008</port> <!-- Port waarop de server draait -->
 	</server>
-	<server name="Server2"> <!-- name is weergave naam -->
+	<server name="Server 2"> <!-- name is weergave naam -->
 		<host>localhost</host><!-- Mag IP of hostname zijn-->
-		<port>8009</port> <!-- Port waarop de server draait -->
+		<port>8008</port> <!-- Port waarop de server draait -->
 	</server>
 	<logging>
 		<logfile>management.log</logfile>

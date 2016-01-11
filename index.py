@@ -8,7 +8,6 @@ from lxml import etree
 import agentconnector
 import cgi, cgitb
 import logging
-import os
 import graphs
 cgitb.enable()
 # HTML-metadata
@@ -20,6 +19,25 @@ print                               # blank line, end of headers
 configtree = etree.parse('mgmtconfig.xml')
 #print etree.tostring(configtree, pretty_print=True).decode('UTF-8') # print inhoud van XML pagina
 
+# Logging opzetten
+logfile = str(configtree.xpath('/config/logging/logfile/text()')[0])
+loglevel = str(configtree.xpath('/config/logging/loglevel/text()')[0])
+logger = logging.getLogger()
+logger.setLevel(loglevel)
+
+# file handler maken, deze schrijft uiteindelijk het log weg
+handler = logging.FileHandler(logfile)
+handler.setLevel(loglevel)
+
+# format voor het log
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+# begin van het log schrijven
+logger.warning('--------------BEGIN LOG--------------')
+logger.warning('Script is begonnen')
+
 # Loop door alle servers...
 systems = configtree.xpath('/config/server')
 serveragent={}
@@ -28,9 +46,11 @@ for i in systems:
     host = i.xpath('./host')[0].text
     port = i.xpath('./port')[0].text
     serveragent[i.get('name')] = agentconnector.agent(name, host, port)
+    logger.warning(serveragent[i.get('name')])
     
 #opvragen CGI data
 cgidata = cgi.FieldStorage()
+logger.warning('CGI data: '+str(cgidata))
 page = cgidata.getvalue('page')
 results = cgidata.getvalue('results')
 req_all  = bool(cgidata.getvalue('req_all'))
@@ -41,6 +61,8 @@ req_ip  = bool(cgidata.getvalue('req_ip'))
 req_freespace  = bool(cgidata.getvalue('req_freespace'))
 req_uptime  = bool(cgidata.getvalue('req_uptime'))
 req_loggedinusers  = bool(cgidata.getvalue('req_loggedinusers'))
+
+
 
 if page == None:
     page = 'Home'
@@ -56,8 +78,10 @@ if page == None:
 
 if results == '1':
     if req_all == True:
+        logger.warning('Alle gegevens van '+page+' worden opgevraagd.')
         reactie = serveragent[page].retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
     else:
+        logger.warning('Gegevens van '+page+': platform '+ str(req_platform) +"ip"+ str(req_ip) +"loggedin users"+ str(req_loggedinusers) +"services"+ str(req_services) +"freespace"+ str(req_freespace)+"ram"+ str(req_ram) +"uptime"+ str(req_uptime))
         reactie = serveragent[page].retrievedata(platform=req_platform, ip=req_ip, loggedinusers=req_loggedinusers, services=req_services, freespace=req_freespace, ram=req_ram, uptime=req_uptime)
 #loop door waardes heen
 #for i in cgidata.keys():
@@ -104,12 +128,14 @@ print '''</ul>
 </div>
 <div class="main-content">'''
 if page == 'Home':
+    logger.warning('Homepagina wordt weergegeven')
     print '''
     <h1>Homepage</h1>
     <p>Welkom op de beheerspagina van het management systeem van Jasper en Niels. Dit systeem kan van agents systeem informatie opvragen, welke informatie precies kan worden aangegeven in het selectie veld op de desbetreffende agent pagina.</p>
     <p>Voordat het systeem werkt moet eerst het configuratiebestand worden aangepast, hoe dat dit precies moet staat beschreven in het INSTALL.txt bestand.</p>    
     '''
 if page != 'Home':
+    logger.warning(page +' pagina wordt weergegeven')
     print '''
     <h1>%s</h1>
     <p>
@@ -132,14 +158,17 @@ if page != 'Home':
     ''' % (page,page)
     if results == '1':
         if reactie == False:
+            logger.warning(page +' is onbreikbaar, controleer netwerkverbinding / instellingen')
             print '''<p>De agent is niet te bereiken! Controleer de instellingen / netwerk verbinding en probeer het opnieuw.</p>'''
         else:
             resultaten = agentconnector.process_response(reactie)
+            logger.warning("Resultaten ontvangen: "+str(resultaten))
             tablerows = ''
             grafieken = ''
             for i in resultaten:
                 if i == 'services':
                     grafiek = graphs.gen_pie_xofx(resultaten[i][0],resultaten[i][1],'Running','Stopped')
+                    logger.warning("Services grafiek gegenereerd")
                     grafieken = grafieken + ''' <div class="item-wd-2-4">
                     	<div class="item-content">
                     		<h1>Services</h1>
@@ -190,3 +219,7 @@ print '''</div>
 </div>
 </body>
 </html>'''
+logger.warning('Pagina volledig verstuurd.')
+logger.warning('---------------END LOG---------------')
+handler.close()
+logger.removeHandler(handler)
