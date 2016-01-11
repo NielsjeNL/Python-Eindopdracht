@@ -9,6 +9,7 @@ import agentconnector
 import cgi, cgitb
 import logging
 import os
+import graphs
 cgitb.enable()
 # HTML-metadata
 #print 'Status: 200 OK\n'
@@ -73,11 +74,9 @@ print '''<!DOCTYPE html>
   <link href="style.css" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
-  <script language="javascript" type="text/javascript">
-  function resizeIframe(obj) {
-    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-  }
-</script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 </head>
 
 <body>
@@ -137,14 +136,45 @@ if page != 'Home':
         else:
             resultaten = agentconnector.process_response(reactie)
             tablerows = ''
+            grafieken = ''
             for i in resultaten:
                 if i == 'services':
+                    grafiek = graphs.gen_pie_xofx(resultaten[i][0],resultaten[i][1],'Running','Stopped')
+                    grafieken = grafieken + ''' <div class="item-wd-2-4">
+                    	<div class="item-content">
+                    		<h1>Services</h1>
+                    		<p>Status: %i running services en %i gestopte services</p>
+                    		<img src="data:image/png;base64,%s"/>
+                    	</div>
+                    </div>
+                    ''' % (int(resultaten[i][0]),int(resultaten[i][1]),grafiek)
                     tablerows = tablerows + ("<tr><td>Running services</td><td>%s</td></tr>" % (resultaten[i][0]))
+                elif i=='ram':
+                    #grafiek = graphs.used_bar(int(resultaten[i][1]),int(resultaten[i][0]))
+                    percentage = int(100-(float(resultaten[i][1])/float(resultaten[i][0])*100))
+                    grafieken = grafieken + '''
+                    <script>
+                          $(function() {
+                            $( "#progressbar" ).progressbar({
+                              value: %i
+                            });
+                          });
+                          </script>
+                    <div class="item-wd-2-4">
+                    	<div class="item-content">
+                    		<h1>Werkgeheugen</h1>
+                    		<p>Onderstaande balk geeft aan hoeveel geheugen er van de %s MB verbruikt is.</p>
+                    		<div id="progressbar"><div class="progress-label">%i %%</div></div>
+                    	</div>
+                    </div>
+                    ''' % (percentage,resultaten[i][0],percentage)
+                    tablerows = tablerows + ("<tr><td>Werkgeheugen</td><td>%s MB</td></tr>" % (resultaten[i][0]))
                 else:
                     tablerows = tablerows + ("<tr><td>%s</td><td>%s</td></tr>" % (i,resultaten[i]))
+                
             
             print '''
-            <div class="item-wd-1-3">
+            <div class="item-wd-2-4">
                 <div class="item-content">
                     <h1>Systeem informatie</h1>
                         <table> '''
@@ -152,7 +182,7 @@ if page != 'Home':
             print '''</table>
             	</div>
             </div> '''
-
+            print grafieken
 print '''</div>
 <div class="container footer">
 	<p>© 2015 door Jasper van Duijn en Niels den Otter</p>

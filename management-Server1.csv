@@ -1,0 +1,14 @@
+2016-01-11 19:30:20,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram/><platform>win32</platform><services>112 121</services></resultaat>
+2016-01-11 19:31:31,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 11277</ram><platform/><services/></resultaat>
+2016-01-11 19:33:18,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip>169.254.64.212</ip><ram>16266 11273</ram><platform>win32</platform><services>112 121</services></resultaat>
+2016-01-11 19:34:30,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip>169.254.64.212</ip><ram>16266 11151</ram><platform>win32</platform><services>113 120</services></resultaat>
+2016-01-11 19:36:52,Server1,Requested zooi,<resultaat><loggedinusers/><freespace>111.83 GB</freespace><uptime/><ip>169.254.64.212</ip><ram/><platform>win32</platform><services>111 122</services></resultaat>
+2016-01-11 19:38:09,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip>169.254.64.212</ip><ram>16266 11050</ram><platform>win32</platform><services/></resultaat>
+2016-01-11 19:40:02,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 11035</ram><platform/><services/></resultaat>
+2016-01-11 19:41:24,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 11040</ram><platform/><services/></resultaat>
+2016-01-11 19:55:32,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 10787</ram><platform/><services/></resultaat>
+2016-01-11 19:57:25,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 10780</ram><platform/><services/></resultaat>
+2016-01-11 19:57:53,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 10781</ram><platform/><services/></resultaat>
+2016-01-11 19:58:20,Server1,Requested zooi,<resultaat><loggedinusers/><freespace/><uptime/><ip/><ram>16266 11228</ram><platform/><services/></resultaat>
+2016-01-11 19:58:41,Server1,Requested zooi,"<resultaat><loggedinusers>1</loggedinusers><freespace>111.82 GB</freespace><uptime>10 days, 22 hours, 34 minutes</uptime><ip>169.254.64.212</ip><ram>16266 11245</ram><platform>win32</platform><services>112 121</services></resultaat>"
+2016-01-11 20:03:13,Server1,Requested zooi,"<resultaat><loggedinusers>1</loggedinusers><freespace>111.82 GB</freespace><uptime>10 days, 22 hours, 39 minutes</uptime><ip>169.254.64.212</ip><ram>16266 11084</ram><platform>win32</platform><services>110 123</services></resultaat>"
