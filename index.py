@@ -105,7 +105,10 @@ for name in serveragent:
         print "<li class=\"header-nav-item\"><a class=\"header-nav-linkc\" href=\"index.py?page=%s\">%s</a></li>" % (name,name)
     else:
         print "<li class=\"header-nav-item\"><a class=\"header-nav-link\" href=\"index.py?page=%s\">%s</a></li>" % (name,name)
-
+if page == 'history':
+    print '''<li class="header-nav-item"><a class="header-nav-linkc" href="index.py?page=history">History</a></li>'''
+else:
+    print '''<li class="header-nav-item"><a class="header-nav-link" href="index.py?page=history">History</a></li>'''
 print '''</ul>
 <!--
 <ul class="header-nav right">
@@ -122,6 +125,22 @@ if page == 'Home':
     <p>Welkom op de beheerspagina van het management systeem van Jasper en Niels. Dit systeem kan van agents systeem informatie opvragen, welke informatie precies kan worden aangegeven in het selectie veld op de desbetreffende agent pagina.</p>
     <p>Voordat het systeem werkt moet eerst het configuratiebestand worden aangepast, hoe dat dit precies moet staat beschreven in het INSTALL.txt bestand.</p>    
     '''
+if page == 'history'	
+	print '''<h1>Historische data</h1>
+	<p>Op deze pagina worden oude gegevens uit de database weergegeven van de agents die in het XML bestand zijn aangemaakt. Dit kan handig zijn om patronen te herkennen.</p> <p>Op dit moment wordt er elke 5 minuten data opgehaald en worden alleen de laatste 5 resultaten weergegeven, als er nog geen 5 resultaten zijn wordt er niets weergegeven.</p>
+	'''
+	for name in serveragent:
+		grafiek = graph.services_bar(name)
+		if grafiek != False:
+			print ''' <div class="item-wd-2-4">
+                    	<div class="item-content">
+                    		<h1>%s</h1>
+                    		<p>Status van de laatste 5 keer dat de services zijn opgevraagd op %s</p>
+                    		<img src="data:image/png;base64,%s"/>
+                    	</div>
+                    </div>
+                    ''' % (name,name,grafiek)
+	
 if page != 'Home':
     logger.warning(page +' pagina wordt weergegeven')
     print '''
