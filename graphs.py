@@ -51,7 +51,7 @@ def services_bar(hostname):
         servT4 = listSQL[3][2] + listSQL [3][3]
         servT5 = listSQL[4][2] + listSQL [4][3]
     except:
-        print 'Er zijn niet genoeg gegevens om totalen te maken.'
+        print 'Er zijn niet genoeg gegevens van',hostname,'om grafieken te maken.'
         return False
     # Grafiek maken van de services
     N = 5

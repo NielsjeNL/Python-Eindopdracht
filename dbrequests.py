@@ -15,13 +15,15 @@ hosts   = {}
 # Config inlezen
 configtree = etree.parse('mgmtconfig.xml')
 systems = configtree.xpath('/config/server')
+names = ''
 for i in systems:
     name = i.get('name')
+    names = names + i.get('name') + ', '
     host = i.xpath('./host')[0].text
     port = i.xpath('./port')[0].text
     hosts[i.get('name')] = agentconnector.agent(name, host, port)
     
-print 'Ingestelde hosts:', hosts
+print 'Ingestelde hosts:', names
 
 # SQLite DB opzetten, als data.db niet bestaat maakt hij deze vanzelf aan
 conn = sqlite3.connect('data.db')
