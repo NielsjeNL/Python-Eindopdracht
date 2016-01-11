@@ -52,14 +52,39 @@ class agent():
             self.online = False
             return False
 
+def process_response(response):
+    output = {}
+    todelete =[]
+    output['platform'] = str(response.platform)
+    output['ip'] = str(response.ip)
+    output['loggedinusers'] = str(response.loggedinusers)
+    output['services'] = str(response.services).split()
+    output['freespace'] = str(response.freespace)
+    output['ram'] = str(response.ram).split()
+    output['uptime'] = str(response.uptime)
+    print output
+    print ''
+    for i in output:
+        print i, '-', output[i]
+        if output[i] == '':
+            print output[i], "is leeg dus verwijdert"
+            todelete.append(i)
+        if output[i] == []:
+            print output[i], "is leeg dus verwijdert"
+            todelete.append(i)
+    for i in todelete:
+        print output[i], "is leeg dus verwijdert"
+        del output[i]
+    return output
+    
 #test = agent('Jasper-PC1', 'localhost', 8008)
 #reactie = test.retrievedata(platform=True, ip=True, loggedinusers=True, services=True, freespace=True, ram=True, uptime=True)
 #reactie = test.retrievedata(services=True,platform=True)
+
 #reactie.platform
 #reactie.ip
 #reactie.loggedinusers
 #reactie.services
-#print str(reactie.services).split()[0]
 #reactie.freespace
 #reactie.ram
 #reactie.uptime
